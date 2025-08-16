@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>kalman_wheels</name>
+  <name>distobee_wheels</name>
   <version>0.0.0</version>
-  <description>controller node that converts Twist messages on `/cmd_vel` and similar topics to the actual wheel state; Also includes safeguards that can limit the acceleration and velocity or stop the rover to adjust wheel rotation.</description>
+  <description>Controller node which publishes TwistStamped message on odrive CAN topics</description>
   <maintainer email="102436271+RafalS3@users.noreply.github.com">RafalS3</maintainer>
   <license>MIT</license>
 
@@ -11,7 +11,10 @@
   <buildtool_depend>ament_cmake_python</buildtool_depend>
 
   <exec_depend>geometry_msgs</exec_depend>
-  <exec_depend>joy_linux</exec_depend>
+  <!-- <exec_depend>joy_linux</exec_depend> -->
+  <exec_depend>joy</exec_depend>
+  <exec_depend>ackermann_msgs</exec_depend>
+
 
 
   <test_depend>ament_lint_auto</test_depend>

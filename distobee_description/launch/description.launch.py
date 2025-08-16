@@ -23,24 +23,14 @@ def launch_setup(context):
         ),
     ]
     # Only to visualize the robot model in RViz.
-    description += [
-        Node(
-            package='joint_state_publisher_gui',
-            executable='joint_state_publisher_gui',
-            parameters=[{'source_list': ['/robot_description']}],
-        )
-    ]
-    # TO DO!
     # description += [
     #     Node(
-    #         package="joint_state_publisher",
-    #         executable="joint_state_publisher",
-    #         name="joint_state_publisher",
-    #         parameters=[
-    #             {"source_list": [...]},
-    #         ]
-    #     ),
+    #         package='joint_state_publisher_gui',
+    #         executable='joint_state_publisher_gui',
+    #         parameters=[{'source_list': ['/robot_description']}],
+    #     )
     # ]
+    # RVIz
     description += [
         Node(
             package='rviz2',
@@ -48,7 +38,7 @@ def launch_setup(context):
             name='rviz2',
             output='screen',
             arguments=[
-                "-d", str(get_package_share_path('distobee_description') / "rviz" / "distobee.rviz")],
+                "-d", str(get_package_share_path('distobee_description') / "rviz" / "view.rviz")],
         ),
     ]
 

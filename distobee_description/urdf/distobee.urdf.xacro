@@ -22,7 +22,7 @@
 
   <!-- wheels -->
   <xacro:include filename="$(find distobee_description)/urdf/wheels.urdf.xacro" />
-  <xacro:wheels base_footprint="base_footprint" wheel_radius="0.2" />
+  <xacro:wheels base_footprint="base_footprint" rear_wheel_radius="0.2" front_wheel_radius="0.14" />
 
   <!-- ros2_control -->
   <xacro:include filename="$(find distobee_description)/urdf/ros2_control.urdf.xacro" />

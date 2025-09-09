@@ -5,12 +5,8 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 import xacro
 
+
 def launch_setup(context):
-    def get_bool(name):
-        return LaunchConfiguration(name).perform(context).lower() == "true"
-
-    joint_state_publisher_gui = get_bool("joint_state_publisher_gui")
-
     actions = []
 
     # robot structure TF publisher
@@ -29,33 +25,21 @@ def launch_setup(context):
         ),
     ]
 
-    parameters=[
-        {
-            "rate": 30,
-            "source_list": [
-                "/ros2_control/joint_states",
-            ]
-        },
+    # joint state publisher: muxes joint states for display in RViz
+    actions += [
+        Node(
+            package="joint_state_publisher",
+            executable="joint_state_publisher",
+            parameters=[
+                {
+                    "rate": 30,
+                    "source_list": [
+                        "/ros2_control/joint_states",
+                    ],
+                },
+            ],
+        ),
     ]
-    if joint_state_publisher_gui:
-        # alternative joint state publisher with GUI
-        actions += [
-            Node(
-                package="joint_state_publisher_gui",
-                executable="joint_state_publisher_gui",
-                parameters=parameters,
-            ),
-        ]
-    else:
-        # joint state publisher
-        # Required for 3D model joints to show up.
-        actions += [
-            Node(
-                package="joint_state_publisher",
-                executable="joint_state_publisher",
-                parameters=parameters,
-            ),
-        ]
 
     return actions
 
@@ -63,12 +47,6 @@ def launch_setup(context):
 def generate_launch_description():
     return LaunchDescription(
         [
-            DeclareLaunchArgument(
-                "joint_state_publisher_gui",
-                default_value="false",
-                choices=["true", "false"],
-                description="Start the joint state publisher in GUI mode.",
-            ),
             OpaqueFunction(function=launch_setup),
         ]
     )

@@ -5,8 +5,7 @@ from typing import Literal, TypedDict
 
 
 class Description(TypedDict):
-    joint_state_publisher_gui: Literal["false", "true"]
-    "Start the joint state publisher in GUI mode. Valid choices are: ['true', 'false']"
+    pass
 
 
 class Hardware(TypedDict):
@@ -18,6 +17,10 @@ class Rviz(TypedDict):
     "Space separated RViz configuration file names without extensions, e.g. 'autonomy demo_rgbd'"
 
 
+class Wheels(TypedDict):
+    pass
+
+
 class BringupConfig(TypedDict):
     description: Description
     "distobee_description"
@@ -25,3 +28,5 @@ class BringupConfig(TypedDict):
     "distobee_hardware"
     rviz: Rviz
     "distobee_rviz"
+    wheels: Wheels
+    "distobee_wheels"

@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="distobee_robot">
+  <xacro:macro name="wheels" params="base_footprint wheel_radius">
+    <xacro:property name="steering_track_width" value="0.9" />
+    <xacro:property name="traction_track_width" value="0.9" />
+    <xacro:property name="wheelbase" value="0.9" />
+    <xacro:property name="steering_extension" value="0.1" />
+    
+    <link name="wheel_bl_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://distobee_description/stl/rear_wheel.stl" />
+        </geometry>
+        <material name="white" />
+      </visual>
+    </link>
+    <joint name="wheel_bl_joint" type="continuous">
+      <parent link="${base_footprint}" />
+      <child link="wheel_bl_link" />
+      <origin xyz="${-wheelbase/2} ${traction_track_width/2} ${wheel_radius}" rpy="0 0 0" />
+      <axis xyz="0 1 0" />
+    </joint>
+
+    <link name="wheel_br_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://distobee_description/stl/rear_wheel.stl" />
+        </geometry>
+        <material name="white" />
+      </visual>
+    </link>
+    <joint name="wheel_br_joint" type="continuous">
+      <parent link="${base_footprint}" />
+      <child link="wheel_br_link" />
+      <origin xyz="${-wheelbase/2} ${-traction_track_width/2} ${wheel_radius}" rpy="0 0 0" />
+      <axis xyz="0 1 0" />
+    </joint>
+
+    <link name="turn_fl_link" />
+    <joint name="turn_fl_joint" type="revolute">
+      <parent link="${base_footprint}" />
+      <child link="turn_fl_link" />
+      <origin xyz="${wheelbase/2} ${steering_track_width/2 - steering_extension} ${wheel_radius}" rpy="0 0 0" />
+      <axis xyz="0 0 1" />
+      <limit lower="-0.3" upper="0.3" effort="100.0" velocity="1.0" />
+    </joint>
+    <link name="wheel_fl_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://distobee_description/stl/rear_wheel.stl" />
+        </geometry>
+        <material name="white" />
+      </visual>
+    </link>
+    <joint name="wheel_fl_joint" type="continuous">
+      <parent link="turn_fl_link" />
+      <child link="wheel_fl_link" />
+      <origin xyz="0 ${steering_extension} 0" rpy="0 0 0" />
+      <axis xyz="0 1 0" />
+    </joint>
+
+    <link name="turn_fr_link" />
+    <joint name="turn_fr_joint" type="revolute">
+      <parent link="${base_footprint}" />
+      <child link="turn_fr_link" />
+      <origin xyz="${wheelbase/2} ${-steering_track_width/2 + steering_extension} ${wheel_radius}" rpy="0 0 0" />
+      <axis xyz="0 0 1" />
+      <limit lower="-0.3" upper="0.3" effort="100.0" velocity="1.0" />
+    </joint>
+    <link name="wheel_fr_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://distobee_description/stl/rear_wheel.stl" />
+        </geometry>
+        <material name="white" />
+      </visual>
+    </link>
+    <joint name="wheel_fr_joint" type="continuous">
+      <parent link="turn_fr_link" />
+      <child link="wheel_fr_link" />
+      <origin xyz="0 ${-steering_extension} 0" rpy="0 0 0" />
+      <axis xyz="0 1 0" />
+    </joint>
+  </xacro:macro>
+</robot>

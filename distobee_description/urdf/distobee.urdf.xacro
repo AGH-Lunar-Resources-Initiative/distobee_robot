@@ -1,20 +1,30 @@
 <?xml version="1.0"?>
-<!-- Basic differential drive mobile base -->
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="distobee_robot">
-  <xacro:arg name="prefix" default="" />
-  <xacro:arg name="use_mock_hardware" default="false" />
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="distobee">
+  <material name="white">
+    <color rgba="0.8 0.8 0.8 1" />
+  </material>
 
-  <xacro:include filename="$(find distobee_description)/urdf/distobee_description.urdf.xacro" />
+  <!-- https://www.ros.org/reps/rep-0120.html -->
+  <link name="base_footprint" />
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://distobee_description/stl/body.stl" />
+      </geometry>
+      <material name="white" />
+    </visual>
+  </link>
+  <joint name="base_joint" type="fixed">
+    <origin xyz="-0.2 0 0.15" />
+    <parent link="base_footprint" />
+    <child link="base_link" />
+  </joint>
 
-  <!-- Import Rviz colors -->
-  <!--<xacro:include filename="$(find odrive_botwheel_explorer)/urdf/diffbot.materials.xacro" />-->
+  <!-- wheels -->
+  <xacro:include filename="$(find distobee_description)/urdf/wheels.urdf.xacro" />
+  <xacro:wheels base_footprint="base_footprint" wheel_radius="0.2" />
 
-  <!-- Import ros2_control description -->
-  <xacro:include filename="$(find distobee_description)/urdf/distobee.ros2_control.xacro" />
-
-  <xacro:diffbot prefix="$(arg prefix)" />
-
-  <xacro:distobee_ros2_control
-    name="distobee" prefix="$(arg prefix)" use_mock_hardware="$(arg use_mock_hardware)"/>
-
+  <!-- ros2_control -->
+  <xacro:include filename="$(find distobee_description)/urdf/ros2_control.urdf.xacro" />
+  <xacro:ros2_control />
 </robot>

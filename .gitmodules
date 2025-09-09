@@ -1,3 +1,6 @@
 [submodule "vendor/ros_odrive"]
 	path = vendor/ros_odrive
-	url = https://github.com/odriverobotics/ros_odrive.git
+	url = ../../odriverobotics/ros_odrive.git
+[submodule "vendor/joy_linux"]
+	path = vendor/joy_linux
+	url = ../../agh-space-systems-rover/joy_linux.git

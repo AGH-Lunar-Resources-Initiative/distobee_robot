@@ -2,11 +2,8 @@ cmake_minimum_required(VERSION 3.8)
 project(distobee_description)
 
 find_package(ament_cmake REQUIRED)
-find_package(ament_cmake_python REQUIRED)
 
-
-
-install(DIRECTORY launch urdf rviz models
+install(DIRECTORY launch urdf stl
   DESTINATION share/${PROJECT_NAME}
 )
 

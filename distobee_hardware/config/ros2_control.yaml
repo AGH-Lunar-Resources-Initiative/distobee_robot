@@ -1,0 +1,52 @@
+/**/controller_manager:
+  ros__parameters:
+    update_rate: 30
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    ackermann_steering_controller:
+      type: ackermann_steering_controller/AckermannSteeringController
+
+/**/ackermann_steering_controller:
+  ros__parameters:
+    # https://github.com/ros-controls/ros2_controllers/blob/jazzy/ackermann_steering_controller/src/ackermann_steering_controller.yaml
+    # (Optional) Steering wheel track length. If not set, 'traction_track_width' will be used.
+    # steering_track_width: 0.34
+    # Traction wheel track length. For details see: https://en.wikipedia.org/wiki/Wheelbase
+    traction_track_width: 0.9
+    # Distance between front and rear wheels. For details see: https://en.wikipedia.org/wiki/Wheelbase
+    wheelbase: 0.9
+    # Traction wheels radius.
+    traction_wheels_radius: 0.2
+
+    # https://github.com/ros-controls/ros2_controllers/blob/jazzy/steering_controllers_library/src/steering_controllers_library.yaml
+    # Timeout for controller references after which they will be reset. This is especially useful for controllers that can cause unwanted and dangerous behavior if reference is not reset, e.g., velocity controllers. If value is 0 the reference is reset after each run.
+    reference_timeout: 1.0
+    # Names of traction wheel joints. For kinematic configurations with two traction joints, the expected order is: right joint, left joint.
+    traction_joints_names: ["wheel_br_joint", "wheel_bl_joint"]
+    # Names of steering joints. For kinematic configurations with two steering joints, the expected order is: right joint, left joint. The orientation of the steering axes is expected as such: When positive steering position value is commanded, then the robot should turn in positive direction of the z-axis of the vehicle (see REP-103).
+    steering_joints_names: ["turn_fr_joint", "turn_fl_joint"]
+    # (Optional) Names of tractions joints to read states from. If not set joint names from 'traction_joints_names' will be used.
+    # traction_joints_state_names: []
+    # (Optional) Names of steering joints to read states from. If not set joint names from 'steering_joints_names' will be used.
+    # steering_joints_state_names: []
+    # Choose if open-loop or not (feedback) is used for odometry calculation.
+    open_loop: false
+    # Reduce wheel speed until the steering angle has been reached.
+    reduce_wheel_speed_until_steering_reached: false
+    # The number of velocity samples to average together to compute the odometry twist.linear.x and twist.angular.z velocities.
+    velocity_rolling_window_size: 10
+    # Base frame_id set to value of base_frame_id.
+    base_frame_id: "base_link"
+    # Odometry frame_id set to value of odom_frame_id.
+    odom_frame_id: "odom"
+    # Publishing to tf is enabled or disabled?
+    enable_odom_tf: true
+    # diagonal values of twist covariance matrix.
+    twist_covariance_diagonal: [0.0, 7.0, 14.0, 21.0, 28.0, 35.0]
+    # diagonal values of pose covariance matrix.
+    pose_covariance_diagonal: [0.0, 7.0, 14.0, 21.0, 28.0, 35.0]
+    # Choice of feedback type, if position_feedback is false then ``HW_IF_VELOCITY`` is taken as interface type, if
+    # position_feedback is true then ``HW_IF_POSITION`` is taken as interface type
+    position_feedback: false

@@ -3,7 +3,7 @@
 <package format="3">
   <name>distobee_description</name>
   <version>0.0.0</version>
-  <description>distobee model in urdf</description>
+  <description>distobee_description</description>
   <maintainer email="102436271+RafalS3@users.noreply.github.com">RafalS3</maintainer>
   <license>MIT</license>
 

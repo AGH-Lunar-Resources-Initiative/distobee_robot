@@ -3,7 +3,7 @@
 <package format="3">
   <name>distobee_wheels</name>
   <version>0.0.0</version>
-  <description>Controller node which publishes TwistStamped message on odrive CAN topics</description>
+  <description>distobee_wheels</description>
   <maintainer email="102436271+RafalS3@users.noreply.github.com">RafalS3</maintainer>
   <license>MIT</license>
 
@@ -11,11 +11,7 @@
   <buildtool_depend>ament_cmake_python</buildtool_depend>
 
   <exec_depend>geometry_msgs</exec_depend>
-  <!-- <exec_depend>joy_linux</exec_depend> -->
-  <exec_depend>joy</exec_depend>
   <exec_depend>joy_linux</exec_depend>
-
-
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

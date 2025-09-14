@@ -19,7 +19,7 @@ class GamepadDriving(Node):
         # Parameters
         self.toggle_modes = ["MANUAL", "TEMPOMAT"]
         self.start_mode = self.declare_parameter("driving_mode", "MANUAL")
-        self.speed = self.declare_parameter("speed", 100.0)
+        self.speed = self.declare_parameter("speed", 0.25)
         self.turn_radius = self.declare_parameter("turn_radius", 2.5)
         self.frame_id = self.declare_parameter("frame_id", "base_footprint")
         self.tempomat_speed_step = self.declare_parameter("speed_step", 0.05)

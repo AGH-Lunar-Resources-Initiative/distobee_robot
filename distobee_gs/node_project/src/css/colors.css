@@ -1,0 +1,71 @@
+[data-theme='dark'] {
+  --strong-foreground: #fff;
+  --foreground: #eee;
+  --weak-foreground: #aaa;
+  --active: #888;
+  --interactive: #555;
+  --dark-active: #444;
+  --background: #333;
+  --dark-background: #222;
+  --red-foreground: rgb(255, 102, 102);
+  --yellow-foreground: rgb(255, 204, 102);
+  --green-foreground: rgb(102, 178, 51);
+  --cyan-foreground: rgb(102, 188, 168);
+  --blue-foreground: rgb(102, 102, 255);
+  --magenta-foreground: rgb(255, 102, 178);
+  --red-background: #b55;
+  --yellow-background: #c93;
+  --green-background: #585;
+  --cyan-background: #598;
+  --blue-background: #55a;
+  --magenta-background: #a58;
+  color-scheme: dark; /* Changes the scrollbar color */
+}
+
+[data-theme='light'] {
+  --strong-foreground: #000;
+  --foreground: #333;
+  --weak-foreground: #444;
+  --active: #aaa;
+  --interactive: #ccc;
+  --dark-active: #ccc;
+  --background: #eee;
+  --dark-background: #ddd;
+  --red-foreground: #b55;
+  --yellow-foreground: #c93;
+  --green-foreground: #585;
+  --cyan-foreground: #598;
+  --blue-foreground: #55a;
+  --magenta-foreground: #a58;
+  --red-background: rgb(255, 102, 102);
+  --yellow-background: rgb(255, 204, 102);
+  --green-background: rgb(102, 178, 51);
+  --cyan-background: rgb(102, 188, 168);
+  --blue-background: rgb(102, 102, 255);
+  --magenta-background: rgb(255, 102, 178);
+  color-scheme: light;
+}
+
+[data-theme='berry'] {
+  --strong-foreground: #fff;
+  --foreground: #ece;
+  --weak-foreground: #a8a;
+  --active: #858;
+  --interactive: #635;
+  --dark-active: #623;
+  --background: #423;
+  --dark-background: #212;
+  --red-foreground: rgb(255, 102, 102);
+  --yellow-foreground: rgb(255, 204, 102);
+  --green-foreground: rgb(102, 178, 51);
+  --cyan-foreground: rgb(102, 188, 168);
+  --blue-foreground: rgb(102, 102, 255);
+  --magenta-foreground: rgb(255, 102, 178);
+  --red-background: #b55;
+  --yellow-background: #c93;
+  --green-background: #585;
+  --cyan-background: #598;
+  --blue-background: #55a;
+  --magenta-background: #a58;
+  color-scheme: dark;
+}

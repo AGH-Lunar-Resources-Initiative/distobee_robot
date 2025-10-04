@@ -19,6 +19,8 @@ const defaultKeybinds = {
   'Show Camera 7 on Feed 2': 'KeyU',
   'Show Camera 8 on Feed 2': 'KeyI',
   'Hold to Change Cameras on Feed 2 not 1': null,
+  // Other
+  'Engage Remote E-STOP': 'Semicolon'
 };
 
 // Copy default keybinds to keybinds.

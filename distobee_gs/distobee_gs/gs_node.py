@@ -11,9 +11,8 @@ class GS(Node):
         super().__init__("gs")
 
         self.get_logger().info("Starting the ground station...")
-
         self.node_project_dir = (
-            get_package_share_directory("distobee_gs") + "/node_project"
+                get_package_share_directory("distobee_gs") + "/node_project"
         )
 
         # Run npm install if dependencies were not installed yet.
@@ -44,9 +43,9 @@ class GS(Node):
                 self.get_logger().error("Failed to install npm dependencies.")
                 raise KeyboardInterrupt
 
-        # Run npm start
-        self.get_logger().info("Running 'npm start':")
-        self.run_command("npm start")
+        # Run npm run start-desktop
+        self.get_logger().info("Running 'npm run start-desktop':")
+        self.run_command("npm run start-desktop")
 
     def run_command(self, command: str) -> int:
         # Run and log output line by line
@@ -60,35 +59,6 @@ class GS(Node):
         )
         while process.poll() is None:
             line = process.stdout.readline()
-
-            # If line reads "Starting the development server...", open the browser
-            if "Starting the development server..." in line:
-                # But if it is not the first time the user started the node,
-                # and the browser is already open, we assume
-                # that the ground station is already running.
-
-                # Check if this is the first ever run on this machine.
-                first_run_marker = os.path.expanduser(
-                    "~/.cache/distobee/first_gs_run.txt"
-                )
-                if not os.path.isfile(first_run_marker):
-                    os.makedirs(os.path.dirname(first_run_marker), exist_ok=True)
-                    with open(first_run_marker, "w") as f:
-                        f.write(
-                            "Existence of this file indicates that the ground station was already started once, and the user will know to open the browser manually."
-                        )
-
-                    # Open the browser
-                    webbrowser.open("http://localhost:3000")
-                else:
-                    # If this is not the first run, see if the browser is open.
-                    browser_is_open = False
-                    for proc in sp.Popen(["ps", "aux"], stdout=sp.PIPE).stdout:
-                        if "firefox" in str(proc) or "chromium" in str(proc):
-                            browser_is_open = True
-                            break
-                    if not browser_is_open:
-                        webbrowser.open("http://localhost:3000")
 
             if line:
                 self.get_logger().info(line.strip())

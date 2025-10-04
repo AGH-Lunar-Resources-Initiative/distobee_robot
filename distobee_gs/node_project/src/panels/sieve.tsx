@@ -1,4 +1,4 @@
-import styles from './science.module.css';
+import styles from './sieve.module.css';
 
 import { ros } from '../common/ros';
 import {
@@ -61,105 +61,105 @@ window.addEventListener('ros-connect', () => {
   // Weight topics
   sandWeightTopic = new Topic({
     ros,
-    name: '/science/storage/sand/weight',
+    name: '/sieve/storage/sand/weight',
     messageType: 'std_msgs/Float32'
   });
   rockWeightTopic = new Topic({
     ros,
-    name: '/science/storage/rock/weight',
+    name: '/sieve/storage/rock/weight',
     messageType: 'std_msgs/Float32'
   });
   phValueTopic = new Topic({
     ros,
-    name: '/science/ph/value',
+    name: '/sieve/ph/value',
     messageType: 'std_msgs/Float32'
   });
   phRailTargetVelTopic = new Topic({
     ros,
-    name: '/science/ph/rail/target_vel',
+    name: '/sieve/ph/rail/target_vel',
     messageType: 'std_msgs/Float32'
   });
 
   magnetometerTopic = new Topic({
     ros,
-    name: '/science/magnetic_field/value',
+    name: '/sieve/magnetic_field/value',
     messageType: 'sensor_msgs/MagneticField'
   });
 
   // Weight request services
   sandWeightService = new Service({
     ros,
-    name: '/science/storage/sand/weight/req',
+    name: '/sieve/storage/sand/weight/req',
     serviceType: 'std_srvs/Trigger'
   });
   rockWeightService = new Service({
     ros,
-    name: '/science/storage/rock/weight/req',
+    name: '/sieve/storage/rock/weight/req',
     serviceType: 'std_srvs/Trigger'
   });
 
   // Storage container services
   sandOpenService = new Service({
     ros,
-    name: '/science/storage/sand/open',
+    name: '/sieve/storage/sand/open',
     serviceType: 'std_srvs/Trigger'
   });
   sandCloseService = new Service({
     ros,
-    name: '/science/storage/sand/close',
+    name: '/sieve/storage/sand/close',
     serviceType: 'std_srvs/Trigger'
   });
   rockOpenService = new Service({
     ros,
-    name: '/science/storage/rock/open',
+    name: '/sieve/storage/rock/open',
     serviceType: 'std_srvs/Trigger'
   });
   rockCloseService = new Service({
     ros,
-    name: '/science/storage/rock/close',
+    name: '/sieve/storage/rock/close',
     serviceType: 'std_srvs/Trigger'
   });
 
   // pH service
   phValueService = new Service({
     ros,
-    name: '/science/ph/value/req',
+    name: '/sieve/ph/value/req',
     serviceType: 'std_srvs/Trigger'
   });
 
   magnetometerResetService = new Service({
     ros,
-    name: '/science/magnetic_field/value/req',
+    name: '/sieve/magnetic_field/value/req',
     serviceType: 'std_srvs/Trigger'
   });
 
   // Drill topics/services
   drillWeightTopic = new Topic({
     ros,
-    name: '/science/drill/weight',
+    name: '/sieve/drill/weight',
     messageType: 'std_msgs/Float32'
   });
   drillWeightService = new Service({
     ros,
-    name: '/science/drill/weight/req',
+    name: '/sieve/drill/weight/req',
     serviceType: 'std_srvs/Trigger'
   });
   drillAutoStartService = new Service({
     ros,
-    name: '/science/drill/auto/start',
+    name: '/sieve/drill/auto/start',
     serviceType: 'std_srvs/Trigger'
   });
   drillAutoStopService = new Service({
     ros,
-    name: '/science/drill/auto/stop',
+    name: '/sieve/drill/auto/stop',
     serviceType: 'std_srvs/Trigger'
   });
 
-  window.dispatchEvent(new Event('science-subscribed'));
+  window.dispatchEvent(new Event('sieve-subscribed'));
 });
 
 
-type SciencePanelProps = {
+type SievePanelProps = {
   props: {
     selectedStorage: string;
     sandTareHistory?: number[];
@@ -182,7 +182,7 @@ type DrillContainerProps = {
 
 type PHProbeProps = {};
 
-export default function Science({ props }: SciencePanelProps) {
+export default function Sieve({ props }: SievePanelProps) {
   if (props.selectedStorage === undefined) {
     props.selectedStorage = 'sand';
   }
@@ -218,12 +218,12 @@ export default function Science({ props }: SciencePanelProps) {
   };
 
   return (
-    <div className={styles['science']}>
-      <div className={styles['science-rows']}>
-        <div className={styles['science-row']}>
+    <div className={styles['sieve']}>
+      <div className={styles['sieve-rows']}>
+        <div className={styles['sieve-row']}>
           <Dropdown
-            className={styles['science-row-item']}
-            tooltip='Select science instrument type'
+            className={styles['sieve-row-item']}
+            tooltip='Select sieve instrument type'
             items={STORAGE_OPTIONS.map((opt) => ({
               icon: opt.icon,
               text: opt.name
@@ -263,14 +263,14 @@ function StorageContainer({ selectedStorage, tareHistory, onTareHistoryChange }:
   const [weight, setWeight] = useState<number | null>(null);
   const [rerenderCount, setRerenderCount] = useState(0);
 
-  // Rerender on science-subscribed event
+  // Rerender on sieve-subscribed event
   useEffect(() => {
-    const updateScience = () => {
+    const updateSieve = () => {
       setRerenderCount((count) => count + 1);
     };
-    window.addEventListener('science-subscribed', updateScience);
+    window.addEventListener('sieve-subscribed', updateSieve);
     return () => {
-      window.removeEventListener('science-subscribed', updateScience);
+      window.removeEventListener('sieve-subscribed', updateSieve);
     };
   }, []);
 
@@ -325,9 +325,9 @@ function StorageContainer({ selectedStorage, tareHistory, onTareHistoryChange }:
 
   return (
     <>
-      <div className={styles['science-row']}>
+      <div className={styles['sieve-row']}>
         <Button
-          className={styles['science-row-item']}
+          className={styles['sieve-row-item']}
           tooltip='Open storage container'
           onClick={() => callStorageService('open')}
         >
@@ -335,7 +335,7 @@ function StorageContainer({ selectedStorage, tareHistory, onTareHistoryChange }:
           &nbsp;&nbsp;Open&nbsp;
         </Button>
         <Button
-          className={styles['science-row-item']}
+          className={styles['sieve-row-item']}
           tooltip='Close storage container'
           onClick={() => callStorageService('close')}
         >
@@ -344,11 +344,11 @@ function StorageContainer({ selectedStorage, tareHistory, onTareHistoryChange }:
         </Button>
       </div>
 
-      <div className={styles['science-row']}>
+      <div className={styles['sieve-row']}>
         <Label color={greenBg}>
           <FontAwesomeIcon icon={faWeightHanging} />
         </Label>
-        <Label color={darkBg} className={styles['science-row-item'] + ' ' + styles['science-selectable']}>
+        <Label color={darkBg} className={styles['sieve-row-item'] + ' ' + styles['sieve-selectable']}>
           {displayWeight !== null ? `${displayWeight.toFixed(2)} g` : '---'}
         </Label>
         <Button tooltip='Refresh weight measurement' onClick={() => callStorageService('weight')}>
@@ -356,9 +356,9 @@ function StorageContainer({ selectedStorage, tareHistory, onTareHistoryChange }:
         </Button>
       </div>
 
-      <div className={styles['science-row']}>
+      <div className={styles['sieve-row']}>
         <Button
-          className={styles['science-row-item']}
+          className={styles['sieve-row-item']}
           tooltip='Set current weight as zero (tare)'
           onClick={handleTare}
           disabled={weight === null}
@@ -368,16 +368,16 @@ function StorageContainer({ selectedStorage, tareHistory, onTareHistoryChange }:
         </Button>
       </div>
 
-      <div className={styles['science-row']}>
+      <div className={styles['sieve-row']}>
         <div className={styles['tare-history']}>
-          <div className={styles['science-row']}>
+          <div className={styles['sieve-row']}>
             <Label className={styles['tare-history-header']}>
               <FontAwesomeIcon icon={tareHistory.length > 0 ? faList : faBan} />
               &nbsp; {tareHistory.length > 0 ? '' : 'No'} Tare History
             </Label>
           </div>
           {tareHistory.map((tareValue, index) => (
-            <div key={index} className={styles['science-row']}>
+            <div key={index} className={styles['sieve-row']}>
               <Label className={styles['tare-entry']}>
                 {index + 1}. {tareValue.toFixed(2)} g
               </Label>
@@ -387,9 +387,9 @@ function StorageContainer({ selectedStorage, tareHistory, onTareHistoryChange }:
       </div>
 
       {tareHistory.length > 0 && (
-        <div className={styles['science-row']}>
+        <div className={styles['sieve-row']}>
           <Button
-            className={styles['science-row-item']}
+            className={styles['sieve-row-item']}
             tooltip='Clear all tare history'
             onClick={() => {
               if (window.confirm('Are you sure you want to clear all tare history?')) {
@@ -414,14 +414,14 @@ function PHProbe({}: PHProbeProps) {
 
   const MAX_MOVE_SPEED = 3;
 
-  // Rerender on science-subscribed event
+  // Rerender on sieve-subscribed event
   useEffect(() => {
-    const updateScience = () => {
+    const updateSieve = () => {
       setRerenderCount((count) => count + 1);
     };
-    window.addEventListener('science-subscribed', updateScience);
+    window.addEventListener('sieve-subscribed', updateSieve);
     return () => {
-      window.removeEventListener('science-subscribed', updateScience);
+      window.removeEventListener('sieve-subscribed', updateSieve);
     };
   }, []);
 
@@ -477,31 +477,31 @@ function PHProbe({}: PHProbeProps) {
   const activeColor = style.getPropertyValue('--active');
 
   return <>
-    <div className={styles['science-row']}>
+    <div className={styles['sieve-row']}>
       <Label color={blueBg}>
         <FontAwesomeIcon icon={faDroplet} />
       </Label>
-      <Label color={darkBg} className={styles['science-row-item'] + ' ' + styles['science-selectable']}>
+      <Label color={darkBg} className={styles['sieve-row-item'] + ' ' + styles['sieve-selectable']}>
         {phValue !== null ? `${phValue.toFixed(2)} pH` : '---'}
       </Label>
     </div>
-    <div className={styles['science-row']}>
-      <Button className={styles['science-row-item']} tooltip='Request new pH measurement' onClick={requestPhMeasurement}>
+    <div className={styles['sieve-row']}>
+      <Button className={styles['sieve-row-item']} tooltip='Request new pH measurement' onClick={requestPhMeasurement}>
         <FontAwesomeIcon icon={faArrowRotateRight} />
         &nbsp;&nbsp;
         <span style={{ marginTop: '2px' }}>Refresh</span>
       </Button>
     </div>
-    <div className={styles['science-row']}>
+    <div className={styles['sieve-row']}>
     <div className={styles['tare-history']}>
-      <div className={styles['science-row']}>
-        <Label color={darkBg} className={styles['science-row-item']}>
+      <div className={styles['sieve-row']}>
+        <Label color={darkBg} className={styles['sieve-row-item']}>
           <FontAwesomeIcon icon={faDiagramProject} />
           &nbsp;&nbsp;
           Movement Speed
         </Label>
       </div>
-      <div className={styles['science-row']}>
+      <div className={styles['sieve-row']}>
         {Array.from({ length: MAX_MOVE_SPEED * 2 + 1 }, (_, i) => {
           const speed = -MAX_MOVE_SPEED + i;
           const isActive = speed === moveSpeed;
@@ -522,7 +522,7 @@ function PHProbe({}: PHProbeProps) {
             <Label
               key={speed}
               color={color}
-              className={styles['science-row-item']}
+              className={styles['sieve-row-item']}
               style={style}
             >
               {null}
@@ -530,9 +530,9 @@ function PHProbe({}: PHProbeProps) {
           );
         })}
       </div>
-      <div className={styles['science-row']}>
+      <div className={styles['sieve-row']}>
         <Button
-          className={styles['science-row-item']}
+          className={styles['sieve-row-item']}
           tooltip="Decrease movement speed"
           onClick={() => setMoveSpeed((speed) => Math.max(-MAX_MOVE_SPEED, speed - 1))}
         >
@@ -541,7 +541,7 @@ function PHProbe({}: PHProbeProps) {
           <span style={{ marginTop: '2px' }}>Down</span>
         </Button>
         <Button
-          className={styles['science-row-item']}
+          className={styles['sieve-row-item']}
           tooltip="Stop movement"
           onClick={() => {
             setMoveSpeed(0);
@@ -553,7 +553,7 @@ function PHProbe({}: PHProbeProps) {
           <span style={{ marginTop: '2px' }}>Stop</span>
         </Button>
         <Button
-          className={styles['science-row-item']}
+          className={styles['sieve-row-item']}
           tooltip="Increase movement speed"
           onClick={() => setMoveSpeed((speed) => Math.min(MAX_MOVE_SPEED, speed + 1))}
         >
@@ -571,12 +571,12 @@ function Magnetometer() {
   const [rerenderCount, setRerenderCount] = useState(0);
 
   useEffect(() => {
-    const updateScience = () => {
+    const updateSieve = () => {
       setRerenderCount((count) => count + 1);
     };
-    window.addEventListener('science-subscribed', updateScience);
+    window.addEventListener('sieve-subscribed', updateSieve);
     return () => {
-      window.removeEventListener('science-subscribed', updateScience);
+      window.removeEventListener('sieve-subscribed', updateSieve);
     };
   }, []);
 
@@ -609,30 +609,30 @@ function Magnetometer() {
   const darkBg = style.getPropertyValue('--dark-background');
 
   return <>
-    <div className={styles['science-row']}>
+    <div className={styles['sieve-row']}>
       <Label  color={redBg}>X</Label>
-      <Label color={darkBg} className={styles['science-row-item'] + ' ' + styles['science-selectable']}>
+      <Label color={darkBg} className={styles['sieve-row-item'] + ' ' + styles['sieve-selectable']}>
         {magField ? magField.x.toFixed(2) : '---'}
       </Label>
       <Label color={greenBg}>Y</Label>
-      <Label color={darkBg} className={styles['science-row-item'] + ' ' + styles['science-selectable']}>
+      <Label color={darkBg} className={styles['sieve-row-item'] + ' ' + styles['sieve-selectable']}>
         {magField ? magField.y.toFixed(2) : '---'}
       </Label>
       <Label color={blueBg}>Z</Label>
-      <Label color={darkBg} className={styles['science-row-item'] + ' ' + styles['science-selectable']}>
+      <Label color={darkBg} className={styles['sieve-row-item'] + ' ' + styles['sieve-selectable']}>
         {magField ? magField.z.toFixed(2) : '---'}
       </Label>
     </div>
-    <div className={styles['science-row']}>
+    <div className={styles['sieve-row']}>
       <Label color={magentaBg}>
         <FontAwesomeIcon icon={faRuler} />
       </Label>
-      <Label color={darkBg} className={styles['science-row-item'] + ' ' + styles['science-selectable']}>
+      <Label color={darkBg} className={styles['sieve-row-item'] + ' ' + styles['sieve-selectable']}>
         {magField ? magField.abs.toFixed(2) : '---'}
       </Label>
     </div>
-    <div className={styles['science-row']}>
-      <Button className={styles['science-row-item']} tooltip='Request new magnetometer measurement' onClick={requestMagnetometerMeasurement}>
+    <div className={styles['sieve-row']}>
+      <Button className={styles['sieve-row-item']} tooltip='Request new magnetometer measurement' onClick={requestMagnetometerMeasurement}>
         <FontAwesomeIcon icon={faArrowRotateRight} />
         &nbsp;&nbsp;<span style={{ marginTop: '2px' }}>Refresh</span>
       </Button>
@@ -644,14 +644,14 @@ function DrillContainer({ tareHistory, onTareHistoryChange }: DrillContainerProp
   const [weight, setWeight] = useState<number | null>(null);
   const [rerenderCount, setRerenderCount] = useState(0);
 
-  // Rerender on science-subscribed event
+  // Rerender on sieve-subscribed event
   useEffect(() => {
-    const updateScience = () => {
+    const updateSieve = () => {
       setRerenderCount((count) => count + 1);
     };
-    window.addEventListener('science-subscribed', updateScience);
+    window.addEventListener('sieve-subscribed', updateSieve);
     return () => {
-      window.removeEventListener('science-subscribed', updateScience);
+      window.removeEventListener('sieve-subscribed', updateSieve);
     };
   }, []);
 
@@ -708,12 +708,12 @@ function DrillContainer({ tareHistory, onTareHistoryChange }: DrillContainerProp
 
   return (
     <>
-      <div className={styles['science-row']}>
+      <div className={styles['sieve-row']}>
         <Label color={magentaBg}>
           <FontAwesomeIcon icon={faRobot} />
         </Label>
         <Button
-          className={styles['science-row-item']}
+          className={styles['sieve-row-item']}
           tooltip='Start drill autonomy'
           onClick={handleStartAutonomy}
         >
@@ -721,7 +721,7 @@ function DrillContainer({ tareHistory, onTareHistoryChange }: DrillContainerProp
           &nbsp;&nbsp;Start
         </Button>
         <Button
-          className={styles['science-row-item']}
+          className={styles['sieve-row-item']}
           tooltip='Stop drill autonomy'
           onClick={handleStopAutonomy}
         >
@@ -730,11 +730,11 @@ function DrillContainer({ tareHistory, onTareHistoryChange }: DrillContainerProp
         </Button>
       </div>
 
-      <div className={styles['science-row']}>
+      <div className={styles['sieve-row']}>
         <Label color={greenBg}>
           <FontAwesomeIcon icon={faWeightHanging} />
         </Label>
-        <Label color={darkBg} className={styles['science-row-item'] + ' ' + styles['science-selectable']}>
+        <Label color={darkBg} className={styles['sieve-row-item'] + ' ' + styles['sieve-selectable']}>
           {displayWeight !== null ? `${displayWeight.toFixed(2)} g` : '---'}
         </Label>
         <Button tooltip='Refresh weight measurement' onClick={callDrillWeightService}>
@@ -742,9 +742,9 @@ function DrillContainer({ tareHistory, onTareHistoryChange }: DrillContainerProp
         </Button>
       </div>
 
-      <div className={styles['science-row']}>
+      <div className={styles['sieve-row']}>
         <Button
-          className={styles['science-row-item']}
+          className={styles['sieve-row-item']}
           tooltip='Set current weight as zero (tare)'
           onClick={handleTare}
           disabled={weight === null}
@@ -754,16 +754,16 @@ function DrillContainer({ tareHistory, onTareHistoryChange }: DrillContainerProp
         </Button>
       </div>
 
-      <div className={styles['science-row']}>
+      <div className={styles['sieve-row']}>
         <div className={styles['tare-history']}>
-          <div className={styles['science-row']}>
+          <div className={styles['sieve-row']}>
             <Label className={styles['tare-history-header']}>
               <FontAwesomeIcon icon={tareHistory.length > 0 ? faList : faBan} />
               &nbsp; {tareHistory.length > 0 ? '' : 'No'} Tare History
             </Label>
           </div>
           {tareHistory.map((tareValue, index) => (
-            <div key={index} className={styles['science-row']}>
+            <div key={index} className={styles['sieve-row']}>
               <Label className={styles['tare-entry']}>
                 {index + 1}. {tareValue.toFixed(2)} g
               </Label>
@@ -773,9 +773,9 @@ function DrillContainer({ tareHistory, onTareHistoryChange }: DrillContainerProp
       </div>
 
       {tareHistory.length > 0 && (
-        <div className={styles['science-row']}>
+        <div className={styles['sieve-row']}>
           <Button
-            className={styles['science-row-item']}
+            className={styles['sieve-row-item']}
             tooltip='Clear all tare history'
             onClick={() => {
               if (window.confirm('Are you sure you want to clear all tare history?')) {

@@ -1,4 +1,4 @@
-.science {
+.sieve {
   width: 100%;
   height: 100%;
   display: flex;
@@ -7,7 +7,7 @@
   min-width: 250px;
 }
 
-.science-rows {
+.sieve-rows {
   display: flex;
   flex-direction: column;
   justify-content: stretch;
@@ -16,7 +16,7 @@
   min-width: 250px;
 }
 
-.science-row {
+.sieve-row {
   display: flex;
   flex-direction: row;
   justify-content: stretch;
@@ -24,11 +24,11 @@
   margin-top: -5px;
 }
 
-.science-row-item {
+.sieve-row-item {
   flex: 1;
 }
 
-.science-selectable {
+.sieve-selectable {
   user-select: text;
 }
 

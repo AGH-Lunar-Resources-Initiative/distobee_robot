@@ -21,8 +21,15 @@
     "typescript": "^4.4.2",
     "url-loader": "^4.1.1"
   },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "cross-env": "^7",
+    "electron": "^30.5.1",
+    "wait-on": "^7"
+  },
   "scripts": {
-    "start": "BROWSER=none react-scripts start",
+    "start": "ELECTRON_RUN=0 BROWSER=none react-scripts start",
+    "start-desktop": "cross-env ELECTRON_RUN=1 BROWSER=none concurrently -k -n UI,ELECTRON -c auto \"react-scripts start\" \"wait-on http-get://localhost:3000 && electron ./electron/main.js\"",
     "format": "prettier --write ."
   },
   "browserslist": {

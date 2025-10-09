@@ -8,7 +8,7 @@ import { faGear, faVial, faVideo, faMicroscope, faHeart } from '@fortawesome/fre
 
 // Add new panels here:
 export type PanelID = 'pipes' | 'wheels' | 'feeds' | 'science' | 'anime';
-export const defaultPanel: PanelID = 'science';
+export const defaultPanel: PanelID = 'anime';
 export const panelInfos: Panels = {
   pipes: {
     Component: Pipes,

@@ -43,9 +43,9 @@ class GS(Node):
                 self.get_logger().error("Failed to install npm dependencies.")
                 raise KeyboardInterrupt
 
-        # Run npm run start-desktop
-        self.get_logger().info("Running 'npm run start-desktop':")
-        self.run_command("npm run start-desktop")
+        # Run npm run both
+        self.get_logger().info("Running 'npm run both':")
+        self.run_command("npm run both")
 
     def run_command(self, command: str) -> int:
         # Run and log output line by line

@@ -28,8 +28,9 @@
     "wait-on": "^7"
   },
   "scripts": {
-    "start": "ELECTRON_RUN=0 BROWSER=none react-scripts start",
-    "start-desktop": "cross-env ELECTRON_RUN=1 BROWSER=none concurrently -k -n UI,ELECTRON -c auto \"react-scripts start\" \"wait-on http-get://localhost:3000 && electron ./electron/main.js\"",
+    "start": "react-scripts start",
+    "electron": "wait-on http://localhost:3000 && electron ./electron/main.js",
+    "both": "concurrently -n UI,ELECTRON -c auto \"react-scripts start\" \"wait-on http://localhost:3000 && electron ./electron/main.js\"",
     "format": "prettier --write ."
   },
   "browserslist": {

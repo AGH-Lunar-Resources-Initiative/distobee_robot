@@ -96,6 +96,7 @@ function Wheel({ type, angle, velocity, showTarget }: WheelProps) {
         src={showTarget ? distobeeLeftWheelOutline : distobeeLeftWheel}
         className={styles['wheel-image']}
         draggable='false'
+        alt=''
       />
       <Arrow
         velocity={velocity}

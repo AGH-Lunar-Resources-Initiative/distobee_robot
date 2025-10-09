@@ -1,44 +1,79 @@
+/* pipes.module.css */
 .pipes {
   width: 100%;
   height: 100%;
   display: grid;
   place-items: center;
+  user-select: none;
+  padding: 1rem;
 }
 
 .wrapper {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  gap: 2rem;
+  gap: clamp(0.75rem, 4vw, 2rem);
+  width: 100%;
+  max-width: 900px;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--green-foreground);
+}
+
+.ok { color: var(--green-foreground); }
+.alert { color: var(--red-foreground); animation: blinker 1s linear infinite; }
+
+.feed-controls-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: -5px;
+  max-width: 160px;
+  gap: 0.5rem;
+  color: inherit;
+}
+
+.input {
+  width: 110px;
 }
 
 .pipe-state {
-  width: min(28vmin, 260px);
-  height: min(28vmin, 260px);
+  width: clamp(120px, 28vmin, 260px);
+  height: clamp(120px, 28vmin, 260px);
   display: grid;
   place-items: center;
-  background-color: var(--green-foreground);
-}
-
-.pipe-state-alert {
-  background-color: var(--red-foreground);
-  animation: blinker 1s step-end infinite;
+  background: transparent;
+  margin-top: 0.5rem;
 }
 
 .icon {
   width: 100%;
   height: 100%;
-  background-color: inherit;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-size: contain;
-  mask-size: contain;
+  background-color: currentColor;
 }
 
 @keyframes blinker {
-  50% {
-    opacity: 0;
+  50% { opacity: 0; }
+}
+
+@media (max-width: 720px) {
+  .wrapper {
+    gap: clamp(0.5rem, 3vw, 1rem);
+  }
+  .feed-controls-row {
+    max-width: 140px;
+    gap: 0.4rem;
+  }
+  .input {
+    width: 96px;
+  }
+  .pipe-state {
+    width: clamp(96px, 24vmin, 200px);
+    height: clamp(96px, 24vmin, 200px);
   }
 }

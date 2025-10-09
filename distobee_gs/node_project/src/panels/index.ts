@@ -1,17 +1,13 @@
+import Anime from './anime';
 import Feeds from './feeds';
+import Pipes from './pipes';
 import Sieve from './sieve';
-import Wheels from "./wheels";
-import Pipes from "./pipes";
+import Wheels from './wheels';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import {
-  faGear,
-  faVial,
-  faVideo,
-  faMicroscope
-} from '@fortawesome/free-solid-svg-icons';
+import { faGear, faVial, faVideo, faMicroscope, faHeart } from '@fortawesome/free-solid-svg-icons';
 
 // Add new panels here:
-export type PanelID = 'pipes' | 'wheels' | 'feeds' | 'science';
+export type PanelID = 'pipes' | 'wheels' | 'feeds' | 'science' | 'anime';
 export const defaultPanel: PanelID = 'science';
 export const panelInfos: Panels = {
   pipes: {
@@ -33,6 +29,11 @@ export const panelInfos: Panels = {
     Component: Sieve,
     name: 'Sieve',
     icon: faMicroscope
+  },
+  anime: {
+    Component: Anime,
+    name: 'For You <3',
+    icon: faHeart
   }
 };
 

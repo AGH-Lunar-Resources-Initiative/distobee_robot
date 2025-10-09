@@ -69,3 +69,27 @@
   --magenta-background: #a58;
   color-scheme: dark;
 }
+
+[data-theme='pink'] {
+  --strong-foreground: #fff0f6;
+  --foreground: #ffd6e8;
+  --weak-foreground: #ffb3d9;
+  --active: #ff66b3;
+  --interactive: #ff3385;
+  --dark-active: #e60073;
+  --background: #ff4da6;
+  --dark-background: #b30059;
+  --red-foreground: #ff4d6d;
+  --yellow-foreground: #ffcc33;
+  --green-foreground: #66ff99;
+  --cyan-foreground: #66ffff;
+  --blue-foreground: #6699ff;
+  --magenta-foreground: #ff33cc;
+  --red-background: #ff6680;
+  --yellow-background: #ffdd66;
+  --green-background: #99ffbb;
+  --cyan-background: #99ffff;
+  --blue-background: #99bbff;
+  --magenta-background: #ff66e0;
+  color-scheme: light;
+}

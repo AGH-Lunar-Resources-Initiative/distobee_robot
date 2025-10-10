@@ -136,6 +136,7 @@ function Rover({ showTarget = false }: RoverProps) {
               src={distobeeBody}
               className={styles['body']}
               draggable='false'
+              alt={''}
             />
           )}
           <Wheel

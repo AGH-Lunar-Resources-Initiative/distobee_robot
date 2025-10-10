@@ -1,69 +1,76 @@
-// Pipes.tsx
-import styles from './pipes.module.css'
-import { useEffect, useState } from 'react'
-import { ros } from '../common/ros'
-import { Topic } from 'roslib'
-import pipeUrl from '!!url-loader!../media/distobee-pipe.svg'
-import Label from '../components/label'
-import Input from '../components/input'
+import styles from './pipes.module.css';
 
-export type PipeStates = { left?: boolean; right?: boolean }
-let lastPipeStates: PipeStates | null = null
+import pipeUrl from '!!url-loader!../media/distobee-pipe.svg';
+import { ros } from '../common/ros';
+import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useEffect, useState } from 'react';
+import { Topic } from 'roslib';
+
+import Input from '../components/input';
+import Label from '../components/label';
+
+export type PipeStates = { left?: boolean; right?: boolean };
+let lastPipeStates: PipeStates | null = null;
 
 window.addEventListener('ros-connect', () => {
   const topic = new Topic({
     ros,
     name: '/pipe_states',
     messageType: 'distobee_interfaces/PipeStates'
-  })
+  });
   topic.subscribe((msg: PipeStates) => {
-    lastPipeStates = msg
-    window.dispatchEvent(new Event('pipe-states'))
-  })
-})
+    lastPipeStates = msg;
+    window.dispatchEvent(new Event('pipe-states'));
+  });
+});
 
 export default function Pipes() {
-  const [leftAlert, setLeftAlert] = useState(false)
-  const [rightAlert, setRightAlert] = useState(false)
+  const [leftAlert, setLeftAlert] = useState(false);
+  const [rightAlert, setRightAlert] = useState(false);
 
   const setPipeStates = () => {
-    setLeftAlert(Boolean(lastPipeStates?.left))
-    setRightAlert(Boolean(lastPipeStates?.right))
-  }
+    setLeftAlert(Boolean(lastPipeStates?.left));
+    setRightAlert(Boolean(lastPipeStates?.right));
+  };
 
   useEffect(() => {
-    window.addEventListener('pipe-states', setPipeStates)
-    return () => window.removeEventListener('pipe-states', setPipeStates)
-  }, [])
+    window.addEventListener('pipe-states', setPipeStates);
+    return () => window.removeEventListener('pipe-states', setPipeStates);
+  }, []);
 
   const maskStyle = {
     WebkitMask: `url(${pipeUrl}) center / contain no-repeat`,
     mask: `url(${pipeUrl}) center / contain no-repeat`
-  } as const
+  } as const;
 
   return (
-    <div className={styles.pipes}>
-      <div className={styles.wrapper}>
-        <div className={`${styles.col} ${leftAlert ? styles.alert : styles.ok}`}>
-          <div className={styles['feed-controls-row']}>
-            <Label>Left</Label>
-            <Input className={styles.input} defaultValue="Left" disabled />
+    <div className={styles['pipes']}>
+      <div className={styles['pipes-stage']}>
+        <div className={`${styles['pipes-group']} ${styles['left']} ${leftAlert ? styles['pipe-state-alert'] : ''}`}>
+          <div className={styles['pipes-row']}>
+            <Label color='currentColor'>
+              <FontAwesomeIcon icon={faArrowLeft} style={{ color: 'white'}} />
+            </Label>
+            <Input className={styles['pipe-state-input']} defaultValue='Left' disabled />
           </div>
           <div className={styles['pipe-state']}>
-            <div className={styles.icon} style={maskStyle} />
+            <div className={styles['pipe-state-icon']} style={maskStyle} />
           </div>
         </div>
 
-        <div className={`${styles.col} ${rightAlert ? styles.alert : styles.ok}`}>
-          <div className={styles['feed-controls-row']}>
-            <Label>Right</Label>
-            <Input className={styles.input} defaultValue="Right" disabled />
+        <div className={`${styles['pipes-group']} ${styles['right']} ${rightAlert ? styles['pipe-state-alert'] : ''}`}>
+          <div className={styles['pipes-row']}>
+            <Input className={styles['pipe-state-input']} defaultValue='Right' disabled />
+            <Label color='currentColor'>
+              <FontAwesomeIcon icon={faArrowRight} style={{ color: 'white'}} />
+            </Label>
           </div>
           <div className={styles['pipe-state']}>
-            <div className={styles.icon} style={maskStyle} />
+            <div className={styles['pipe-state-icon']} style={maskStyle} />
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

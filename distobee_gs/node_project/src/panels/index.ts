@@ -7,7 +7,7 @@ import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faGear, faVial, faVideo, faMicroscope, faHeart } from '@fortawesome/free-solid-svg-icons';
 
 // Add new panels here:
-export type PanelID = 'pipes' | 'wheels' | 'feeds' | 'science' | 'anime';
+export type PanelID = 'pipes' | 'wheels' | 'feeds' | 'sieve' | 'anime';
 export const defaultPanel: PanelID = 'anime';
 export const panelInfos: Panels = {
   pipes: {
@@ -25,7 +25,7 @@ export const panelInfos: Panels = {
     name: 'Feeds',
     icon: faVideo
   },
-  science: {
+  sieve: {
     Component: Sieve,
     name: 'Sieve',
     icon: faMicroscope

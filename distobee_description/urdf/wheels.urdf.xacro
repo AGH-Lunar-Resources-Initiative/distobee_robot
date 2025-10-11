@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro" name="distobee_robot">
   <xacro:macro name="wheels" params="base_footprint rear_wheel_radius front_wheel_radius">
-    <xacro:property name="steering_track_width" value="0.9" />
-    <xacro:property name="traction_track_width" value="0.9" />
+    <xacro:property name="steering_track_width" value="0.7" />
+    <xacro:property name="traction_track_width" value="0.7" />
     <xacro:property name="wheelbase" value="0.9" />
     <xacro:property name="steering_extension" value="0.1" />
 

@@ -42,6 +42,14 @@ def launch_setup(context):
                 },
             ],
         ),
+        Node(
+            package="distobee_wheels",
+            executable="twist_controller",
+        ),
+        Node(
+            package="distobee_wheels",
+            executable="wheel_joints_publisher",
+        ),
     ]
 
     return actions

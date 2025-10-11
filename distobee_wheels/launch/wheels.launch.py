@@ -8,14 +8,18 @@ def launch_setup(context):
     actions = []
 
     actions += [
+        # Node(
+            # package="joy_linux",
+            # executable="joy_linux_node",
+            # parameters=[
+                # {
+                    # "dev_name": "Logitech Gamepad",
+                # }
+            # ],
+        # ),
         Node(
-            package="joy_linux",
-            executable="joy_linux_node",
-            parameters=[
-                {
-                    "dev_name": "Logitech Gamepad",
-                }
-            ],
+            package="joy",
+            executable="joy_node",
         ),
         Node(
             package="distobee_wheels",
@@ -25,7 +29,17 @@ def launch_setup(context):
                     get_package_share_path("distobee_wheels")
                     / "config"
                     / "gamepad_driving.yaml"
-                )
+                    
+                ),
+                {
+                "driving_mode": "MANUAL",
+                "robot_max_vel": 0.25,
+                "pipe_max_tilt_angle": 2.0,
+                "tempomat_vel_step": 0.05,
+                "pipe_max_vel": 0.02,
+                "pipe_vel_step": 0.05,
+                "pipe_tilt_step": 0.05,
+                },
             ],
         ),
     ]

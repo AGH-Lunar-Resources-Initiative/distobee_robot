@@ -18,7 +18,9 @@ TURN_VECTORS = [
 ]
 
 # wheel radius in meters (for converting linear velocity to angular velocity)
-WHEEL_RADIUS = 0.15  # 15cm radius - adjust this value based on actual wheel size
+WHEEL_RADIUS = 0.2  # 20cm radius - adjust this value based on actual wheel size
+
+MAX_ACCEL = 0.5 # rad/s^2
 
 def flip_angle(angle):
     angle += np.pi
@@ -41,9 +43,24 @@ class TwistController(rclpy.node.Node):
         # Create state publisher.
         self.wheel_state_pub = self.create_publisher(WheelStates, "wheel_states/target", 10)
 
+        self.last_time = self.get_clock().now()
+        self.smooth_velocity = 0.0
+
     def on_cmd_vel(self, msg: TwistStamped):
+        # smooth velocity
+        current_time = self.get_clock().now()
+        dt = (current_time - self.last_time).nanoseconds / 1e9  # convert to seconds
+        self.last_time = current_time
+        if dt <= 0.0:
+            dt = 1e-6  # Prevent division by zero
+        max_delta = MAX_ACCEL * dt
+        delta = msg.twist.linear.x - self.smooth_velocity
+        if abs(delta) > max_delta:
+            delta = np.sign(delta) * max_delta
+        self.smooth_velocity += delta
+
         # linear motion vector
-        linear_vector = np.array([msg.twist.linear.x, msg.twist.linear.y])
+        linear_vector = np.array([self.smooth_velocity, 0.0])
 
         # angular motion vectors
         angular_vectors = [vec * msg.twist.angular.z for vec in TURN_VECTORS]

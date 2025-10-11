@@ -4,6 +4,9 @@ from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
 from distobee_interfaces.msg import WheelStates
 from odrive_can.msg import ControlMessage, ControllerStatus
 
+ACCEL = 1.0  # rad/s^2
+VEL_SCALE = 120 / 6.28 # post-gearbox rad/s -> pre-gearbox rev/s
+
 
 class WheelDriver(rclpy.node.Node):
     """
@@ -23,7 +26,6 @@ class WheelDriver(rclpy.node.Node):
 
         # Initialize wheel state tracking
         self.current_wheel_states = WheelStates()
-        self.target_wheel_states = WheelStates()
 
         # Status tracking for each ODrive
         self.back_left_status_received = False
@@ -97,15 +99,16 @@ class WheelDriver(rclpy.node.Node):
         # Publish current wheel states periodically
         self.create_timer(0.05, self.publish_current_states)  # 20 Hz
 
-    def on_target_wheel_states(self, msg: WheelStates):
-        """Handle incoming target wheel states and send commands to ODrives"""
-        self.target_wheel_states = msg
+        self.last_time = self.get_clock().now()
+        self.smooth_velocity_left = 0.0
+        self.smooth_velocity_right = 0.0
 
+    def on_target_wheel_states(self, msg: WheelStates):
         # Back left wheel (drive)
         back_left_msg = ControlMessage()
         back_left_msg.control_mode = 2  # VELOCITY_CONTROL
         back_left_msg.input_mode = 1  # PASSTHROUGH
-        back_left_msg.input_vel = -msg.back_left_velocity  # rad/s
+        back_left_msg.input_vel = -msg.back_left_velocity * VEL_SCALE  # rad/s
         back_left_msg.input_pos = 0.0
         back_left_msg.input_torque = 0.0
         self.back_left_control_pub.publish(back_left_msg)
@@ -114,7 +117,7 @@ class WheelDriver(rclpy.node.Node):
         back_right_msg = ControlMessage()
         back_right_msg.control_mode = 2  # VELOCITY_CONTROL
         back_right_msg.input_mode = 1  # PASSTHROUGH
-        back_right_msg.input_vel = msg.back_right_velocity  # rad/s
+        back_right_msg.input_vel = msg.back_right_velocity * VEL_SCALE  # rad/s
         back_right_msg.input_pos = 0.0
         back_right_msg.input_torque = 0.0
         self.back_right_control_pub.publish(back_right_msg)
@@ -139,14 +142,14 @@ class WheelDriver(rclpy.node.Node):
 
     def on_back_left_status(self, msg: ControllerStatus):
         """Update current back left wheel state"""
-        self.current_wheel_states.back_left_velocity = msg.vel_estimate  # rad/s
+        self.current_wheel_states.back_left_velocity = -msg.vel_estimate / VEL_SCALE  # rad/s
         if not self.back_left_status_received:
             self.back_left_status_received = True
             self.get_logger().info("Receiving back left ODrive status")
 
     def on_back_right_status(self, msg: ControllerStatus):
         """Update current back right wheel state"""
-        self.current_wheel_states.back_right_velocity = msg.vel_estimate  # rad/s
+        self.current_wheel_states.back_right_velocity = msg.vel_estimate / VEL_SCALE  # rad/s
         if not self.back_right_status_received:
             self.back_right_status_received = True
             self.get_logger().info("Receiving back right ODrive status")

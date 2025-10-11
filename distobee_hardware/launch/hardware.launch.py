@@ -7,8 +7,8 @@ from launch_ros.actions import Node
 
 # Map of ODrive instances: name, namespace, node_id, interface
 ODRIVE_INSTANCES = [
-    ("odrive_back_left", 11, "can0"),
-    ("odrive_back_right", 12, "can0"),
+    ("odrive_back_left", 11, "can1"),
+    ("odrive_back_right", 12, "can1"),
     ("odrive_front_left", 21, "can0"),
     ("odrive_front_right", 22, "can0"),
     ("odrive_pipes", 30, "can0"),

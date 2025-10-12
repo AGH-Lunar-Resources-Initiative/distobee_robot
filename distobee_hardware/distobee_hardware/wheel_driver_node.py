@@ -1,7 +1,7 @@
 import rclpy
 import rclpy.node
 from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
-from distobee_interfaces.msg import WheelStates
+from distobee_interfaces.msg import WheelStates, WheelTelemetry
 from odrive_can.msg import ControlMessage, ControllerStatus
 
 ACCEL = 1.0  # rad/s^2
@@ -54,6 +54,20 @@ class WheelDriver(rclpy.node.Node):
         # Publish current wheel states
         self.wheel_states_pub = self.create_publisher(
             WheelStates, "wheel_states/current", status_qos
+        )
+
+        # Publish current wheel telemetry, all on dedicated topic
+        self.wheel_telemetry_fl_pub = self.create_publisher(
+            WheelTelemetry, "wheel_states/telemetry/fl", status_qos
+        )
+        self.wheel_telemetry_fr_pub = self.create_publisher(
+            WheelTelemetry, "wheel_states/telemetry/fr", status_qos
+        )
+        self.wheel_telemetry_bl_pub = self.create_publisher(
+            WheelTelemetry, "wheel_states/telemetry/bl", status_qos
+        )
+        self.wheel_telemetry_br_pub = self.create_publisher(
+            WheelTelemetry, "wheel_states/telemetry/br", status_qos
         )
 
         # Publishers for ODrive control messages
@@ -146,6 +160,9 @@ class WheelDriver(rclpy.node.Node):
         if not self.back_left_status_received:
             self.back_left_status_received = True
             self.get_logger().info("Receiving back left ODrive status")
+        wheel_telemetry = WheelTelemetry()
+        wheel_telemetry.state = msg.axis_state
+        self.wheel_telemetry_bl_pub.publish(wheel_telemetry)
 
     def on_back_right_status(self, msg: ControllerStatus):
         """Update current back right wheel state"""
@@ -153,6 +170,9 @@ class WheelDriver(rclpy.node.Node):
         if not self.back_right_status_received:
             self.back_right_status_received = True
             self.get_logger().info("Receiving back right ODrive status")
+        wheel_telemetry = WheelTelemetry()
+        wheel_telemetry.state = msg.axis_state
+        self.wheel_telemetry_br_pub.publish(wheel_telemetry)
 
     def on_front_left_status(self, msg: ControllerStatus):
         """Update current front left wheel state"""
@@ -160,6 +180,9 @@ class WheelDriver(rclpy.node.Node):
         if not self.front_left_status_received:
             self.front_left_status_received = True
             self.get_logger().info("Receiving front left ODrive status")
+        wheel_telemetry = WheelTelemetry()
+        wheel_telemetry.state = msg.axis_state
+        self.wheel_telemetry_fl_pub.publish(wheel_telemetry)
 
     def on_front_right_status(self, msg: ControllerStatus):
         """Update current front right wheel state"""
@@ -167,6 +190,9 @@ class WheelDriver(rclpy.node.Node):
         if not self.front_right_status_received:
             self.front_right_status_received = True
             self.get_logger().info("Receiving front right ODrive status")
+        wheel_telemetry = WheelTelemetry()
+        wheel_telemetry.state = msg.axis_state
+        self.wheel_telemetry_fr_pub.publish(wheel_telemetry)
 
     def publish_current_states(self):
         """Publish current wheel states"""

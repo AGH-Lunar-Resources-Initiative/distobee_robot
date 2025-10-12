@@ -9,8 +9,8 @@ import { Topic } from 'roslib';
 
 import Input from '../components/input';
 import Label from '../components/label';
+import { PipeStates } from '../common/ros-interfaces';
 
-export type PipeStates = { left?: boolean; right?: boolean };
 let lastPipeStates: PipeStates | null = null;
 
 window.addEventListener('ros-connect', () => {

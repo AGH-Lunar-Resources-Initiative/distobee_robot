@@ -44,7 +44,7 @@ window.addEventListener('ros-connect', () => {
   // Publish camera change to the correct feed topic
   const publishFeed = (feedIndex: 0 | 1) => {
     const camera = feedCameras[feedIndex];
-    const msg = { data: camera };
+    const msg = { data: camera - 1 }; // Index cameras 0-5 / 0-2
     if (feedIndex === 0) {
       topicDistobeeFeed.publish(msg);
     } else {

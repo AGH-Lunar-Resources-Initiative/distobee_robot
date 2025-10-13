@@ -1,17 +1,7 @@
 import styles from './feeds.module.css';
 
-import CHANNELS from '../common/feed-channels';
-import { feedCameras, feedChannels, feedPowers } from '../common/feeds';
-import {
-  IconDefinition,
-  fa1,
-  fa2,
-  faCamera,
-  faCheck,
-  faDisplay,
-  faTowerBroadcast,
-  faWaveSquare
-} from '@fortawesome/free-solid-svg-icons';
+import { feedCameras } from '../common/feeds';
+import { IconDefinition, faCar, faFlask, faCamera, faCheck, faDisplay } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -41,7 +31,6 @@ function IntegerSelector({
   customNames
 }: IntegerSelectorProps) {
   const inputRef = useRef<Input>(null);
-
   const [editing, setEditing] = useState(false);
 
   const onSubmit = useCallback(() => {
@@ -54,7 +43,7 @@ function IntegerSelector({
     }
     setEditing(false);
     onSet(integer);
-  }, [inputRef, min, max]);
+  }, [inputRef, min, max, onSet, customNames]);
 
   return (
     <div className={styles['feed-controls-row']}>
@@ -63,18 +52,14 @@ function IntegerSelector({
       </Label>
       <Input
         className={styles['input'] + (editing ? ' editing' : '')}
-        defaultValue={
-          customNames ? customNames[defaultValue] : defaultValue.toString()
-        }
+        defaultValue={customNames ? customNames[defaultValue] : defaultValue.toString()}
         ref={inputRef}
         onChange={(value) => {
-          // Check if there are non-digit characters
           if (value.match(/\D/)) {
             value = value.replace(/\D/g, '');
             inputRef.current?.setValue(value);
           }
         }}
-        // onSubmit={onSubmit} # Handled by onBlur
         onFocus={() => {
           setEditing(true);
           if (customNames) {
@@ -93,22 +78,24 @@ function IntegerSelector({
 
 type FeedProps = {
   feedIndex: number;
+  max: number;
 };
 
-function Feed({ feedIndex }: FeedProps) {
+function Feed({ feedIndex, max }: FeedProps) {
   const style = getComputedStyle(document.body);
   const redBg = style.getPropertyValue('--red-background');
-  const greenBg = style.getPropertyValue('--green-background');
   const blueBg = style.getPropertyValue('--blue-background');
 
   const [rerenderCount, setRerenderCount] = useState(0);
   useEffect(() => {
-    const updateFeeds = () => {
-      setRerenderCount((count) => count + 1);
-    };
-    window.addEventListener('feeds-updated', updateFeeds);
+    const update = () => setRerenderCount((c) => c + 1);
+
+    window.addEventListener('feeds-updated-distobee', update);
+    window.addEventListener('feeds-updated-sieve', update);
+
     return () => {
-      window.removeEventListener('feeds-updated', updateFeeds);
+      window.removeEventListener('feeds-updated-distobee', update);
+      window.removeEventListener('feeds-updated-sieve', update);
     };
   }, []);
 
@@ -117,51 +104,22 @@ function Feed({ feedIndex }: FeedProps) {
       <div className={styles['feed-controls-row']}>
         <div className={styles['icon']}>
           <FontAwesomeIcon icon={faDisplay} />
-          <FontAwesomeIcon
-            className={styles['icon-digit']}
-            icon={[fa1, fa2][feedIndex]}
-          />
+          <FontAwesomeIcon className={styles['icon-digit']} icon={[faCar, faFlask][feedIndex]} />
         </div>
       </div>
       <IntegerSelector
-        labelColor={redBg}
+        labelColor={feedIndex == 0 ? redBg : blueBg}
         labelIcon={faCamera}
         labelTooltip='Camera (1 to 8)'
         min={1}
-        max={8}
+        max={max}
         defaultValue={feedCameras[feedIndex]}
         onSet={(value) => {
           feedCameras[feedIndex] = value;
-          window.dispatchEvent(new Event('feeds-updated'));
+          const ev = feedIndex === 0 ? 'feeds-updated-distobee' : 'feeds-updated-sieve';
+          window.dispatchEvent(new CustomEvent(ev, { detail: { camera: value } }));
         }}
         key={feedCameras[feedIndex]}
-      />
-      <IntegerSelector
-        labelColor={greenBg}
-        labelIcon={faWaveSquare}
-        labelTooltip='Channel (1 to 40)'
-        min={1}
-        max={40}
-        defaultValue={feedChannels[feedIndex]}
-        onSet={(value) => {
-          feedChannels[feedIndex] = value;
-          window.dispatchEvent(new Event('feeds-updated'));
-        }}
-        customNames={CHANNELS}
-        key={feedChannels[feedIndex] + 100}
-      />
-      <IntegerSelector
-        labelColor={blueBg}
-        labelIcon={faTowerBroadcast}
-        labelTooltip='Power (1 to 4)'
-        min={1}
-        max={4}
-        defaultValue={feedPowers[feedIndex]}
-        onSet={(value) => {
-          feedPowers[feedIndex] = value;
-          window.dispatchEvent(new Event('feeds-updated'));
-        }}
-        key={feedPowers[feedIndex] + 200}
       />
     </div>
   );
@@ -171,8 +129,8 @@ export default function Feeds() {
   return (
     <div className={styles['feeds-panel']}>
       <div className={styles['feeds']}>
-        <Feed feedIndex={0} />
-        <Feed feedIndex={1} />
+        <Feed feedIndex={0} max={6} />
+        <Feed feedIndex={1} max={3} />
       </div>
     </div>
   );

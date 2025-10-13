@@ -29,7 +29,7 @@ class GamepadDriving(Node):
         self.toggle_modes = ["MANUAL", "TEMPOMAT"]
         self.start_mode = self.declare_parameter("driving_mode", "MANUAL")
         self.robot_max_vel = self.declare_parameter("robot_max_vel", 0.25)
-        self.pipe_max_vel = self.declare_parameter("pipe_max_vel", 0.2)
+        self.pipe_max_vel = self.declare_parameter("pipe_max_vel", 10.0)
         self.pipe_max_tilt_angle = self.declare_parameter("pipe_max_tilt_angle", 2.0)
         self.turn_radius = self.declare_parameter("turn_radius", 2.5)
         self.frame_id = self.declare_parameter("frame_id", "base_footprint")
@@ -162,7 +162,7 @@ class GamepadDriving(Node):
             elif msg.axes[SET_PIPES_VEL] == -1.0:
                 self.pipe_vel -= self.pipe_vel_step.value
 
-            self.pipe_vel = min(max(self.pipe_vel, 0.0), self.robot_max_vel.value)
+            self.pipe_vel = min(max(self.pipe_vel, 0.0), self.pipe_max_vel.value)
 
             control_msg = ControlMessage()
             control_msg.control_mode = 2

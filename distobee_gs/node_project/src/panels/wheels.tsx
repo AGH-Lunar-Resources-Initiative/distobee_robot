@@ -128,9 +128,10 @@ type TelemetryProps = {
   type: 'fl' | 'fr' | 'bl' | 'br';
   telemetry: Record<string, any>;
   showTelemetry: boolean;
+  velocity: number;
 };
 
-function Telemetry({ panelId, height, type, telemetry, showTelemetry }: TelemetryProps) {
+function Telemetry({ panelId, height, type, telemetry, showTelemetry, velocity }: TelemetryProps) {
   // Custom component displaying wheel telemetry from distobee_interfaces/WheelTelemetry.
   // Adding new telemetry fields requires updating the interface, its TS type in ros-interfaces.ts,
   // and extending this component to render them.
@@ -161,6 +162,11 @@ function Telemetry({ panelId, height, type, telemetry, showTelemetry }: Telemetr
 
   return (
     <div className={styles['wheel-telemetry'] + ' ' + styles[type]} style={{ height }}>
+      <p>
+        <b>
+          <span className={styles['wheel-telemetry-data']}>{Number(velocity).toFixed(2)} rad/s</span>
+        </b>
+      </p>
       <p>
         {parentOffsetWidth > 600 && <>State: </>}
         <span className={styles['wheel-telemetry-data']}>{axisStateMap[telemetry?.state ?? 0]}</span>
@@ -201,7 +207,14 @@ function Wheel({ panelId, type, angle, velocity, telemetry, showTarget, showTele
   return (
     <>
       {!showTarget && (
-        <Telemetry panelId={panelId} height={height} type={type} telemetry={telemetry} showTelemetry={showTelemetry} />
+        <Telemetry
+          panelId={panelId}
+          height={height}
+          type={type}
+          telemetry={telemetry}
+          showTelemetry={showTelemetry}
+          velocity={velocity}
+        />
       )}
       <div
         ref={ref}

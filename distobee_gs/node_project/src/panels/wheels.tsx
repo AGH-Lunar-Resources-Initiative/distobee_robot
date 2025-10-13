@@ -5,7 +5,7 @@ import distobeeLeftWheelOutline from '!!url-loader!../media/distobee-wheel-outli
 import distobeeLeftWheel from '!!url-loader!../media/distobee-wheel.svg';
 import { ros } from '../common/ros';
 import { WheelStates, WheelTelemetry } from '../common/ros-interfaces';
-import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
+import { MutableRefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Topic } from 'roslib';
 
 let lastWheelStates: WheelStates | null = null;
@@ -47,7 +47,7 @@ window.addEventListener('ros-connect', () => {
 
   telemetryFl.subscribe((msg: WheelTelemetry) => {
     lastWheelTelemetryFl = msg;
-    console.log(msg)
+    console.log(msg);
     window.dispatchEvent(new Event('wheel-telemetry-fl'));
   });
 
@@ -124,17 +124,16 @@ function Arrow({ velocity, angle, thickness }: ArrowProps) {
 
 type TelemetryProps = {
   panelId: string;
-  containerRef: MutableRefObject<HTMLDivElement | null>;
+  height: number;
   type: 'fl' | 'fr' | 'bl' | 'br';
   telemetry: Record<string, any>;
   showTelemetry: boolean;
 };
 
-function Telemetry({ panelId, containerRef, type, telemetry, showTelemetry }: TelemetryProps) {
+function Telemetry({ panelId, height, type, telemetry, showTelemetry }: TelemetryProps) {
   // Custom component displaying wheel telemetry from distobee_interfaces/WheelTelemetry.
   // Adding new telemetry fields requires updating the interface, its TS type in ros-interfaces.ts,
   // and extending this component to render them.
-  const height = containerRef.current?.clientHeight ?? 0;
   const parentOffsetWidth = (document.getElementById(panelId) as HTMLElement)?.offsetWidth ?? 0;
 
   const axisStateMap: Record<number, string> = {
@@ -183,17 +182,26 @@ type WheelProps = {
 function Wheel({ panelId, type, angle, velocity, telemetry, showTarget, showTelemetry }: WheelProps) {
   const ref = useRef<HTMLDivElement | null>(null);
   const thickness = ref.current ? ref.current.clientWidth * 0.3 : 5;
+  const [height, setHeight] = useState(0);
+
+  useLayoutEffect(() => {
+    if (!ref.current) return;
+    const updateSize = () => {
+      setHeight(ref.current.offsetHeight);
+    };
+
+    const ro = new ResizeObserver(updateSize);
+    ro.observe(ref.current);
+
+    updateSize();
+
+    return () => ro.disconnect();
+  }, []);
 
   return (
     <>
       {!showTarget && (
-        <Telemetry
-          panelId={panelId}
-          containerRef={ref}
-          type={type}
-          telemetry={telemetry}
-          showTelemetry={showTelemetry}
-        />
+        <Telemetry panelId={panelId} height={height} type={type} telemetry={telemetry} showTelemetry={showTelemetry} />
       )}
       <div
         ref={ref}

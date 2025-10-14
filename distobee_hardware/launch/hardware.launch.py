@@ -33,6 +33,14 @@ def launch_setup(context):
         for name, node_id, interface in ODRIVE_INSTANCES
     ]
 
+    actions += [
+        Node(
+            package="distobee_hardware",
+            executable="odrive_state_switcher",
+            name="odrive_state_switcher",
+        ),
+    ]
+
     # Wheel driver node
     actions += [
         Node(

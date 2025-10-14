@@ -35,6 +35,7 @@ def launch_setup(context):
                     "rate": 30,
                     "source_list": [
                         "/ros2_control/joint_states",
+                        "/wheel_states/current/joint_states",
                     ],
                 },
             ],

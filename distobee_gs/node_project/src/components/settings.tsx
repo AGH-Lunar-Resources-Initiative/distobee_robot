@@ -1,11 +1,8 @@
 import styles from './settings.module.css';
 
-import {
-  keybinds,
-  resetAllKeybinds,
-  resetKeybind,
-  setKeybind
-} from '../common/keybinds';
+
+
+import { keybinds, resetAllKeybinds, resetKeybind, setKeybind } from '../common/keybinds';
 import { Theme, currentTheme, setTheme } from '../common/themes';
 import Button from './button';
 import Dropdown from './dropdown';
@@ -14,6 +11,7 @@ import { faRaspberryPi } from '@fortawesome/free-brands-svg-icons';
 import {
   faBan,
   faCloudMoon,
+  faHeartPulse,
   faKeyboard,
   faPalette,
   faRefresh,
@@ -22,6 +20,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Component } from 'react';
+
 
 function keyCodeToName(code: string) {
   if (code === null) {
@@ -80,9 +79,7 @@ export default class Settings extends Component<{}, State> {
     } else {
       // Focus the search input when any other key is pressed.
       // Saves the user a little bit of trouble when they forget to click the search box.
-      const input = document.querySelector(
-        `.${styles['search-input-parent']} input`
-      );
+      const input = document.querySelector(`.${styles['search-input-parent']} input`);
       if (input) {
         (input as HTMLInputElement).focus();
         // NOTE: The HTML input box automagically captures this key press.
@@ -118,20 +115,14 @@ export default class Settings extends Component<{}, State> {
     this.setState({ listeningForNewKeybind: action });
     window.addEventListener('keydown', this.keyListener);
     window.removeEventListener('keydown', this.escHandler);
-    window.addEventListener(
-      'mousedown',
-      this.clickToStopListeningForNewKeybindListener
-    );
+    window.addEventListener('mousedown', this.clickToStopListeningForNewKeybindListener);
   }
 
   stopListeningForNewKeybind() {
     this.setState({ listeningForNewKeybind: null });
     window.removeEventListener('keydown', this.keyListener);
     window.addEventListener('keydown', this.escHandler);
-    window.removeEventListener(
-      'mousedown',
-      this.clickToStopListeningForNewKeybindListener
-    );
+    window.removeEventListener('mousedown', this.clickToStopListeningForNewKeybindListener);
   }
 
   keyListener = (e: KeyboardEvent) => {
@@ -162,27 +153,17 @@ export default class Settings extends Component<{}, State> {
     const searchedKeybinds = Object.entries(keybinds)
       .map(
         ([action, key]) =>
-          this.isSearchedFor(
-            action + key + keyCodeToName(key) + 'keybinds'
-          ) && (
+          this.isSearchedFor(action + key + keyCodeToName(key) + 'keybinds') && (
             <div className={styles['keybind']} key={action}>
               <div className={styles['keybind-name']}>{action}</div>
               <div className={styles['keybind-controls']}>
                 <Button
                   className={
                     styles['keybind-value'] +
-                    (this.state.listeningForNewKeybind === action
-                      ? ` ${styles['keybind-value-listening']}`
-                      : '') +
-                    (this.state.listeningForNewKeybind === null
-                      ? ` ${styles['keybind-value-hoverable']}`
-                      : '')
+                    (this.state.listeningForNewKeybind === action ? ` ${styles['keybind-value-listening']}` : '') +
+                    (this.state.listeningForNewKeybind === null ? ` ${styles['keybind-value-hoverable']}` : '')
                   }
-                  tooltip={
-                    this.state.listeningForNewKeybind === null
-                      ? 'Change this keybind.'
-                      : undefined
-                  }
+                  tooltip={this.state.listeningForNewKeybind === null ? 'Change this keybind.' : undefined}
                   onClick={() => {
                     if (this.state.listeningForNewKeybind) {
                       return;
@@ -191,9 +172,7 @@ export default class Settings extends Component<{}, State> {
                   }}
                 >
                   &nbsp;
-                  {this.state.listeningForNewKeybind === action
-                    ? 'Waiting for key...'
-                    : keyCodeToName(key)}
+                  {this.state.listeningForNewKeybind === action ? 'Waiting for key...' : keyCodeToName(key)}
                   &nbsp;
                 </Button>
                 <Button
@@ -230,16 +209,10 @@ export default class Settings extends Component<{}, State> {
 
     return (
       <div
-        className={
-          styles['settings-bg'] +
-          (this.state.shown ? ` ${styles['shown']}` : '')
-        }
+        className={styles['settings-bg'] + (this.state.shown ? ` ${styles['shown']}` : '')}
         onClick={() => this.hide()}
       >
-        <div
-          className={styles['settings']}
-          onClick={(e) => e.stopPropagation()}
-        >
+        <div className={styles['settings']} onClick={(e) => e.stopPropagation()}>
           <div className={styles['content']}>
             <div className={styles['static-header']}>
               <h1>Settings</h1>
@@ -253,13 +226,8 @@ export default class Settings extends Component<{}, State> {
                 />
               </div>
             </div>
-            <div
-              className={styles['scrollable-options']}
-              key={this.state.searchTerm}
-            >
-              {this.isSearchedFor(
-                'select color theme light mode dark mode berry purple'
-              ) && (
+            <div className={styles['scrollable-options']} key={this.state.searchTerm}>
+              {this.isSearchedFor('select color theme light mode dark mode berry purple') && (
                 <>
                   <h2>
                     <FontAwesomeIcon icon={faPalette} />
@@ -280,20 +248,21 @@ export default class Settings extends Component<{}, State> {
                         {
                           icon: faRaspberryPi,
                           text: 'Berry Purple'
+                        },
+                        {
+                          icon: faHeartPulse,
+                          text: 'Sweetty Pink'
                         }
                       ]}
                       onChange={(i) => {
-                        setTheme(['dark', 'light', 'berry'][i] as Theme);
+                        setTheme(['dark', 'light', 'berry', 'pink'][i] as Theme);
                       }}
-                      defaultItemIndex={['dark', 'light', 'berry'].indexOf(
-                        currentTheme
-                      )}
+                      defaultItemIndex={['dark', 'light', 'berry', 'pink'].indexOf(currentTheme)}
                     />
                   </div>
                 </>
               )}
-              {(searchedKeybinds.length > 0 ||
-                this.isSearchedFor('reset all keybinds')) && (
+              {(searchedKeybinds.length > 0 || this.isSearchedFor('reset all keybinds')) && (
                 <>
                   <h2>
                     <FontAwesomeIcon icon={faKeyboard} />

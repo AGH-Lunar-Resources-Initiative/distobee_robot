@@ -111,6 +111,21 @@ export type ColorRGBA = {
 };
 
 // distobee_interfaces
+export type WheelStates = {
+  back_left_velocity?: number;
+  back_right_velocity?: number;
+  front_left_angle?: number;
+  front_right_angle?: number;
+};
+
+export type WheelTelemetry = {
+  state?: number;
+};
+
+export type PipeStates = {
+  left?: boolean;
+  right?: boolean;
+};
 
 export type SetFeedRequest = {
   feed?: number;

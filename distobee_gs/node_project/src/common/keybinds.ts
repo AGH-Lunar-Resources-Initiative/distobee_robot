@@ -1,24 +1,16 @@
 const defaultKeybinds = {
   // Feeds
-  'Cycle Feed 1 Cameras Backwards': 'PageUp',
-  'Cycle Feed 1 Cameras': 'PageDown',
-  'Show Camera 1 on Feed 1': 'Digit1',
-  'Show Camera 2 on Feed 1': 'Digit2',
-  'Show Camera 3 on Feed 1': 'Digit3',
-  'Show Camera 4 on Feed 1': 'Digit4',
-  'Show Camera 5 on Feed 1': 'Digit5',
-  'Show Camera 6 on Feed 1': 'Digit6',
-  'Show Camera 7 on Feed 1': 'Digit7',
-  'Show Camera 8 on Feed 1': 'Digit8',
-  'Show Camera 1 on Feed 2': 'KeyQ',
-  'Show Camera 2 on Feed 2': 'KeyW',
-  'Show Camera 3 on Feed 2': 'KeyE',
-  'Show Camera 4 on Feed 2': 'KeyR',
-  'Show Camera 5 on Feed 2': 'KeyT',
-  'Show Camera 6 on Feed 2': 'KeyY',
-  'Show Camera 7 on Feed 2': 'KeyU',
-  'Show Camera 8 on Feed 2': 'KeyI',
-  'Hold to Change Cameras on Feed 2 not 1': null,
+  'Show Camera 1 on Distobee feed': 'Digit1',
+  'Show Camera 2 on Distobee feed': 'Digit2',
+  'Show Camera 3 on Distobee feed': 'Digit3',
+  'Show Camera 4 on Distobee feed': 'Digit4',
+  'Show Camera 5 on Distobee feed': 'Digit5',
+  'Show Camera 6 on Distobee feed': 'Digit6',
+  'Show Camera 1 on Sieve feed': 'Digit7',
+  'Show Camera 2 on Sieve feed': 'Digit8',
+  'Show Camera 3 on Sieve feed': 'Digit9',
+  // Other
+  'Engage Remote E-STOP': 'Semicolon'
 };
 
 // Copy default keybinds to keybinds.

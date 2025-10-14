@@ -1,5 +1,7 @@
 import styles from './panel-manager.module.css';
 
+import containerAnime from '!!url-loader!../media/container-anime.jpg';
+import containerKutek from '!!url-loader!../media/container-kutek.png';
 import {
   HorizontalPanelLayout,
   LeafPanelLayout,
@@ -9,26 +11,17 @@ import {
 } from '../common/panel-layouts';
 import Button from './button';
 import Dropdown from './dropdown';
-import {
-  faGripLines,
-  faGripLinesVertical,
-  faXmark
-} from '@fortawesome/free-solid-svg-icons';
+import { faGripLines, faGripLinesVertical, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  useCallback,
-  useEffect,
-  useState,
-  useContext,
-  Component,
-  createRef
-} from 'react';
+import { useCallback, useEffect, useState, Component, createRef } from 'react';
 
 import { defaultPanel, panelInfos, PanelID } from '../panels';
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
+
+const CONTAINER_IMAGES = [containerAnime, containerKutek];
 
 export default function PanelManager() {
   const [rerenderCounter, setRerenderCounter] = useState(0);
@@ -67,31 +60,25 @@ export default function PanelManager() {
                 flex: (layout as HorizontalPanelLayout).division
               }}
             >
-              {renderLayout((layout as HorizontalPanelLayout).left, [
-                ...path,
-                'left'
-              ])}
+              {renderLayout((layout as HorizontalPanelLayout).left, [...path, 'left'])}
             </div>
             <div className={styles['horizontal-divider']}>
               <div
                 className={styles['horizontal-divider-handle']}
                 onMouseDown={(event) => {
-                  const layoutElement =
-                    event.currentTarget.parentElement!.parentElement!;
+                  const layoutElement = event.currentTarget.parentElement!.parentElement!;
                   const ogX = event.clientX;
                   const ogDiv = (layout as HorizontalPanelLayout).division;
 
                   document.documentElement.style.cursor = 'col-resize';
 
                   const mouseMove = (event: MouseEvent) => {
-                    let layout =
-                      panelLayouts.layouts[panelLayouts.currentLayout];
+                    let layout = panelLayouts.layouts[panelLayouts.currentLayout];
                     for (const key of path) {
                       layout = (layout as any)[key];
                     }
                     (layout as HorizontalPanelLayout).division = clamp(
-                      ogDiv +
-                        (event.clientX - ogX) / (layoutElement.clientWidth - 5),
+                      ogDiv + (event.clientX - ogX) / (layoutElement.clientWidth - 5),
                       0.1,
                       0.9
                     );
@@ -101,16 +88,10 @@ export default function PanelManager() {
                     // Set CSS styles directly to avoid rerendering
                     layoutElement.children
                       .item(0)!
-                      .setAttribute(
-                        'style',
-                        `flex: ${(layout as HorizontalPanelLayout).division};`
-                      );
+                      .setAttribute('style', `flex: ${(layout as HorizontalPanelLayout).division};`);
                     layoutElement.children
                       .item(2)!
-                      .setAttribute(
-                        'style',
-                        `flex: ${1 - (layout as HorizontalPanelLayout).division};`
-                      );
+                      .setAttribute('style', `flex: ${1 - (layout as HorizontalPanelLayout).division};`);
 
                     // Emit panel resize event to force all panels to resize
                     window.dispatchEvent(new Event('any-panel-resize'));
@@ -131,10 +112,7 @@ export default function PanelManager() {
                 flex: 1 - (layout as HorizontalPanelLayout).division
               }}
             >
-              {renderLayout((layout as HorizontalPanelLayout).right, [
-                ...path,
-                'right'
-              ])}
+              {renderLayout((layout as HorizontalPanelLayout).right, [...path, 'right'])}
             </div>
           </div>
         );
@@ -147,32 +125,25 @@ export default function PanelManager() {
                 flex: (layout as VerticalPanelLayout).division
               }}
             >
-              {renderLayout((layout as VerticalPanelLayout).top, [
-                ...path,
-                'top'
-              ])}
+              {renderLayout((layout as VerticalPanelLayout).top, [...path, 'top'])}
             </div>
             <div className={styles['vertical-divider']}>
               <div
                 className={styles['vertical-divider-handle']}
                 onMouseDown={(event) => {
-                  const layoutElement =
-                    event.currentTarget.parentElement!.parentElement!;
+                  const layoutElement = event.currentTarget.parentElement!.parentElement!;
                   const ogY = event.clientY;
                   const ogDiv = (layout as VerticalPanelLayout).division;
 
                   document.documentElement.style.cursor = 'row-resize';
 
                   const mouseMove = (event: MouseEvent) => {
-                    let layout =
-                      panelLayouts.layouts[panelLayouts.currentLayout];
+                    let layout = panelLayouts.layouts[panelLayouts.currentLayout];
                     for (const key of path) {
                       layout = (layout as any)[key];
                     }
                     (layout as VerticalPanelLayout).division = clamp(
-                      ogDiv +
-                        (event.clientY - ogY) /
-                          (layoutElement.clientHeight - 5),
+                      ogDiv + (event.clientY - ogY) / (layoutElement.clientHeight - 5),
                       0.1,
                       0.9
                     );
@@ -182,16 +153,10 @@ export default function PanelManager() {
                     // Set CSS styles directly to avoid rerendering
                     layoutElement.children
                       .item(0)!
-                      .setAttribute(
-                        'style',
-                        `flex: ${(layout as VerticalPanelLayout).division};`
-                      );
+                      .setAttribute('style', `flex: ${(layout as VerticalPanelLayout).division};`);
                     layoutElement.children
                       .item(2)!
-                      .setAttribute(
-                        'style',
-                        `flex: ${1 - (layout as VerticalPanelLayout).division};`
-                      );
+                      .setAttribute('style', `flex: ${1 - (layout as VerticalPanelLayout).division};`);
 
                     // Emit panel resize event to force all panels to resize
                     window.dispatchEvent(new Event('any-panel-resize'));
@@ -212,10 +177,7 @@ export default function PanelManager() {
                 flex: 1 - (layout as VerticalPanelLayout).division
               }}
             >
-              {renderLayout((layout as VerticalPanelLayout).bottom, [
-                ...path,
-                'bottom'
-              ])}
+              {renderLayout((layout as VerticalPanelLayout).bottom, [...path, 'bottom'])}
             </div>
           </div>
         );
@@ -233,9 +195,7 @@ export default function PanelManager() {
                     icon: panel.icon,
                     text: panel.name
                   }))}
-                  defaultItemIndex={Object.keys(panelInfos).indexOf(
-                    (layout as LeafPanelLayout).panel
-                  )}
+                  defaultItemIndex={Object.keys(panelInfos).indexOf((layout as LeafPanelLayout).panel)}
                   onChange={(i) => {
                     const id = Object.keys(panelInfos)[i];
                     if (path.length === 0) {
@@ -243,8 +203,7 @@ export default function PanelManager() {
                         panel: id as PanelID
                       } as LeafPanelLayout;
                     } else {
-                      let layout =
-                        panelLayouts.layouts[panelLayouts.currentLayout];
+                      let layout = panelLayouts.layouts[panelLayouts.currentLayout];
                       for (const key of path.slice(0, -1)) {
                         layout = (layout as any)[key];
                       }
@@ -258,10 +217,7 @@ export default function PanelManager() {
               </div>
               <div className={styles['panel-header-items']}>
                 {panel.HeaderComponent && (
-                  <panel.HeaderComponent
-                    panelRef={panelRef}
-                    props={(layout as LeafPanelLayout).props}
-                  />
+                  <panel.HeaderComponent panelRef={panelRef} props={(layout as LeafPanelLayout).props} />
                 )}
               </div>
               <div className={styles['panel-controls']}>
@@ -276,11 +232,9 @@ export default function PanelManager() {
                       }
                     };
                     if (path.length === 0) {
-                      panelLayouts.layouts[panelLayouts.currentLayout] =
-                        newLayout;
+                      panelLayouts.layouts[panelLayouts.currentLayout] = newLayout;
                     } else {
-                      let layout =
-                        panelLayouts.layouts[panelLayouts.currentLayout];
+                      let layout = panelLayouts.layouts[panelLayouts.currentLayout];
                       for (const key of path.slice(0, -1)) {
                         layout = (layout as any)[key];
                       }
@@ -302,11 +256,9 @@ export default function PanelManager() {
                       }
                     };
                     if (path.length === 0) {
-                      panelLayouts.layouts[panelLayouts.currentLayout] =
-                        newLayout;
+                      panelLayouts.layouts[panelLayouts.currentLayout] = newLayout;
                     } else {
-                      let layout =
-                        panelLayouts.layouts[panelLayouts.currentLayout];
+                      let layout = panelLayouts.layouts[panelLayouts.currentLayout];
                       for (const key of path.slice(0, -1)) {
                         layout = (layout as any)[key];
                       }
@@ -338,20 +290,15 @@ export default function PanelManager() {
                       }
 
                       if (path.length > 1) {
-                        let layout =
-                          panelLayouts.layouts[panelLayouts.currentLayout];
+                        let layout = panelLayouts.layouts[panelLayouts.currentLayout];
                         for (const key of path.slice(0, -2)) {
                           layout = (layout as any)[key];
                         }
 
-                        (layout as any)[path[path.length - 2]] = (
-                          layout as any
-                        )[path[path.length - 2]][opposite];
+                        (layout as any)[path[path.length - 2]] = (layout as any)[path[path.length - 2]][opposite];
                       } else {
                         panelLayouts.layouts[panelLayouts.currentLayout] = (
-                          panelLayouts.layouts[
-                            panelLayouts.currentLayout
-                          ] as any
+                          panelLayouts.layouts[panelLayouts.currentLayout] as any
                         )[opposite];
                       }
                     }
@@ -363,13 +310,17 @@ export default function PanelManager() {
               </div>
             </div>
             <div className={styles['panel-container']}>
+              <img
+                src={CONTAINER_IMAGES[Math.floor(Math.random() * 2)]}
+                alt=''
+                className={styles['background-image']}
+                aria-hidden='true'
+                draggable='false'
+              />
               {/* <panel.Component props={(layout as LeafPanelLayout).props} /> */}
               {/* If component is a class component, assign a ref */}
               {panel.Component.prototype instanceof Component ? (
-                <panel.Component
-                  ref={panelRef}
-                  props={(layout as LeafPanelLayout).props}
-                />
+                <panel.Component ref={panelRef} props={(layout as LeafPanelLayout).props} />
               ) : (
                 <panel.Component props={(layout as LeafPanelLayout).props} />
               )}
@@ -383,10 +334,7 @@ export default function PanelManager() {
 
   return (
     <div className={styles['panel-manager']}>
-      <div
-        className={styles['layout-container']}
-        key={panelLayouts.currentLayout}
-      >
+      <div className={styles['layout-container']} key={panelLayouts.currentLayout}>
         {renderLayout(panelLayouts.layouts[panelLayouts.currentLayout])}
       </div>
     </div>

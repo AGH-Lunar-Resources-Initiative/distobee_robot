@@ -8,6 +8,8 @@ ament_python_install_package(${PROJECT_NAME})
 
 install(PROGRAMS
   scripts/gamepad_driving
+  scripts/twist_controller
+  scripts/wheel_joints_publisher
   DESTINATION lib/${PROJECT_NAME}
 )
 

@@ -1,4 +1,4 @@
-type Theme = 'dark' | 'light' | 'berry';
+type Theme = 'dark' | 'light' | 'berry' | 'pink';
 
 let currentTheme: Theme = 'dark';
 

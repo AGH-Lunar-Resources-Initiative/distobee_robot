@@ -37,7 +37,7 @@ def launch_setup(context):
                 "pipe_max_tilt_angle": 2.0,
                 "tempomat_vel_step": 0.05,
                 "pipe_max_vel": 10.0,
-                "pipe_vel_step": 1.00,
+                "pipe_vel_step": 5.00,
                 "pipe_tilt_step": 0.05,
                 },
             ],

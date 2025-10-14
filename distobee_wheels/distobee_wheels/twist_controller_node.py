@@ -21,6 +21,7 @@ TURN_VECTORS = [
 WHEEL_RADIUS = 0.2  # 20cm radius - adjust this value based on actual wheel size
 
 MAX_ACCEL = 0.5 # rad/s^2
+MAX_TURN_ANGLE  = 1.2 # rad
 
 def flip_angle(angle):
     angle += np.pi
@@ -81,6 +82,9 @@ class TwistController(rclpy.node.Node):
             if abs(wheel_angles[i]) > np.pi / 2:
                 wheel_linear_velocities[i] = -wheel_linear_velocities[i]
                 wheel_angles[i] = flip_angle(wheel_angles[i])
+
+        # clip wheel angles
+        wheel_angles = [np.clip(ang, -MAX_TURN_ANGLE, MAX_TURN_ANGLE) for ang in wheel_angles]
 
         # normalize wheel velocities
         max_wheel_vel = self.get_parameter("max_wheel_vel").value

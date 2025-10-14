@@ -30,7 +30,7 @@ class FeedDriver(Node):
     def __init__(self):
         super().__init__("feed_driver")
         
-        self.declare_parameter("udp_host", "127.0.0.1")
+        self.declare_parameter("udp_host", "192.168.1.232")
         self.declare_parameter("udp_port", 5000)
         self.host = self.get_parameter("udp_host").value
         self.port = self.get_parameter("udp_port").value
@@ -46,8 +46,10 @@ class FeedDriver(Node):
             self.get_logger().warn("No AV TO USB2.0 devices found")
         
         self._switch_to(None)
+        self.last_device_index = -1
         
         self.create_subscription(Int8, "set_feed", self.on_set_feed, 10)
+
 
     def _build_pipeline(self, device_path):
         # Build GStreamer pipeline: test pattern if device_path is None, camera feed otherwise
@@ -77,6 +79,10 @@ class FeedDriver(Node):
     def on_set_feed(self, msg: Int8):
         idx = msg.data
         
+        if self.last_device_index == idx:
+            return
+        self.last_device_index = idx
+
         if idx == -1:
             self.current_device_idx = None
             self._switch_to(None)

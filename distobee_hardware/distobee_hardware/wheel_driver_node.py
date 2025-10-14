@@ -127,7 +127,7 @@ class WheelDriver(rclpy.node.Node):
         front_left_msg.control_mode = 3  # POSITION_CONTROL
         front_left_msg.input_mode = 1  # PASSTHROUGH
         # front_left_msg.input_pos = msg.front_left_angle - 0.52
-        front_left_msg.input_pos = msg.front_left_angle - 0.32
+        front_left_msg.input_pos = msg.front_left_angle/(2*np.pi) + 0.365
         front_left_msg.input_vel = 0.0
         front_left_msg.input_torque = 0.0
         self.front_left_control_pub.publish(front_left_msg)
@@ -136,7 +136,7 @@ class WheelDriver(rclpy.node.Node):
         front_right_msg = ControlMessage()
         front_right_msg.control_mode = 3  # POSITION_CONTROL
         front_right_msg.input_mode = 1  # PASSTHROUGH
-        front_right_msg.input_pos = msg.front_right_angle - 0.52  # Changed to match our odrive
+        front_right_msg.input_pos = msg.front_right_angle/(2*np.pi) - 0.115 # Changed to match our odrive
         front_right_msg.input_vel = 0.0
         front_right_msg.input_torque = 0.0
         self.front_right_control_pub.publish(front_right_msg)

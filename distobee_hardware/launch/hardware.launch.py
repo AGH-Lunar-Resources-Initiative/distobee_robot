@@ -1,11 +1,12 @@
-from ament_index_python import get_package_share_path
 from launch import LaunchDescription
 from launch.actions import (
-    OpaqueFunction, ExecuteProcess, TimerAction
+    OpaqueFunction,
+    ExecuteProcess,
+    TimerAction
 )
 from launch_ros.actions import Node
 
-# Map of ODrive instances: name, namespace, node_id, interface
+# Map of ODrive instances: name, node_id, interface
 ODRIVE_INSTANCES = [
     ("odrive_back_left", 11, "can1"),
     ("odrive_back_right", 12, "can1"),
@@ -33,23 +34,6 @@ def launch_setup(context):
         for name, node_id, interface in ODRIVE_INSTANCES
     ]
 
-    actions += [
-        Node(
-            package="distobee_hardware",
-            executable="odrive_state_switcher",
-            name="odrive_state_switcher",
-        ),
-    ]
-
-    # Wheel driver node
-    actions += [
-        Node(
-            package="distobee_hardware",
-            executable="wheel_driver",
-            name="wheel_driver",
-        ),
-    ]
-
     # Initialize ODrive axis states after a delay
     actions += [
         TimerAction(
@@ -67,6 +51,33 @@ def launch_setup(context):
                 for name, _, _ in ODRIVE_INSTANCES
             ]
         )
+    ]
+
+    # Switch odrives off on exit
+    actions += [
+        Node(
+            package="distobee_hardware",
+            executable="odrive_state_switcher",
+            name="odrive_state_switcher",
+        ),
+    ]
+
+    # Wheel driver node
+    actions += [
+        Node(
+            package="distobee_hardware",
+            executable="wheel_driver",
+            name="wheel_driver",
+        ),
+    ]
+
+    # Feed driver node
+    actions += [
+        Node(
+            package="distobee_hardware",
+            executable="feed_driver",
+            name="feed_driver",
+        ),
     ]
 
     return actions

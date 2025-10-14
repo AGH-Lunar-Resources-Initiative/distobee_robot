@@ -11,6 +11,7 @@ ament_python_install_package(${PROJECT_NAME})
 install(PROGRAMS
   scripts/feed_driver
   scripts/wheel_driver
+  scripts/odrive_state_switcher
   DESTINATION lib/${PROJECT_NAME}
 )
 

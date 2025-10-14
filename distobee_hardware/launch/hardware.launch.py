@@ -53,6 +53,15 @@ def launch_setup(context):
         )
     ]
 
+    # Switch odrives off on exit
+    actions += [
+        Node(
+            package="distobee_hardware",
+            executable="odrive_state_switcher",
+            name="odrive_state_switcher",
+        ),
+    ]
+
     # Wheel driver node
     actions += [
         Node(

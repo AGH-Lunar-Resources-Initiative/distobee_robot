@@ -1,0 +1,82 @@
+.navbar {
+  padding: 5px 5px 0 5px;
+  background-color: var(--dark-background);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+.logo {
+  width: calc(1em + 4px);
+  height: calc(1em + 4px);
+  padding: 3px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.1s;
+  display: flex;
+}
+
+.logo::before {
+  content: '';
+  width: 100%;
+  scale: 1.5;
+  background-color: var(--foreground);
+  mask-image: url('../media/logo-small-mask.png');
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-mode: luminance;
+}
+
+.logo:hover {
+  background-color: var(--background);
+}
+
+.layout-selector {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  justify-content: center;
+}
+
+.layout-container {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  margin: 0 2.5px 0 2.5px;
+}
+
+.layout {
+  border-radius: 5px 5px 0 0;
+  cursor: pointer;
+  background-color: var(--dark-background);
+  padding: 3px 5px;
+  transition: background-color 0.1s;
+  user-select: none;
+  text-wrap: nowrap;
+}
+
+.layout-container:hover .layout:not(.active),
+.layout:hover {
+  background-color: var(--background);
+}
+
+.layout.active {
+  background-color: var(--dark-active);
+}
+
+.layout-context-menu {
+  background-color: var(--dark-background);
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.indicators {
+  display: flex;
+  align-items: center;
+}
+
+.indicators > :not(:last-child) {
+  margin-right: 2.5px;
+}

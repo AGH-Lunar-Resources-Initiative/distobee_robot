@@ -1,0 +1,166 @@
+:root {
+    --arrow-color: rgb(255, 62, 55);
+    --wheel-container-gap: 2.5%;
+    --telemetry-wheel-gap: 112.5%;
+}
+
+.wheels {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+
+.rover {
+    width: 100%;
+    height: 100%;
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+}
+
+.rover img {
+    filter: brightness(0.5);
+    transition: filter 0.15s;
+}
+
+.rover:global(.show-target) {
+    margin-left: -100%;
+    filter: saturate(0) brightness(100) brightness(0.5);
+}
+
+.rover-h {
+    width: 90%;
+    aspect-ratio: 1 / 1.3;
+    max-width: 500px;
+    max-height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rover-v {
+    height: 60%;
+    aspect-ratio: 1 / 1.3;
+    max-height: 500px;
+    position: relative;
+}
+
+.wheel {
+    position: absolute;
+    width: 19%;
+    aspect-ratio: 0.65;
+}
+
+.wheel.fl {
+    top: var(--wheel-container-gap);
+    left: 2%;
+}
+
+.wheel.fr {
+    top: var(--wheel-container-gap);
+    right: 2%;
+    transform: rotate(180deg);
+}
+
+.wheel.bl {
+    bottom: var(--wheel-container-gap);
+    left: 0;
+    width: 23%;
+}
+
+.wheel.br {
+    bottom: var(--wheel-container-gap);
+    right: 0;
+    width: 23%;
+    transform: rotate(180deg);
+}
+
+.wheel-telemetry {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.wheel-telemetry p {
+    font-size: 12px;
+    margin: 0;
+    color: var(--weak-foreground);
+    text-wrap: nowrap;
+}
+
+.wheel-telemetry p:global(.danger) {
+  color: var(--red-foreground);
+}
+
+.wheel-telemetry.fl {
+    top: var(--wheel-container-gap);
+    right: var(--telemetry-wheel-gap);
+}
+
+.wheel-telemetry.fr {
+    top: var(--wheel-container-gap);
+    left: var(--telemetry-wheel-gap);
+}
+
+.wheel-telemetry.bl {
+    bottom: var(--wheel-container-gap);
+    right: var(--telemetry-wheel-gap);
+}
+
+.wheel-telemetry.br {
+    bottom: var(--wheel-container-gap);
+    left: var(--telemetry-wheel-gap);
+}
+
+.wheel-telemetry-data {
+    color: var(--strong-foreground);
+}
+
+.wheel-image {
+    position: absolute;
+    right: 0;
+    height: 100%;
+    aspect-ratio: 0.935;
+    filter: invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%);
+}
+
+.body {
+    position: absolute;
+    width: 50%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.arrow {
+    height: 0;
+    width: 200%;
+    min-width: 20px;
+    border-style: solid;
+    border-color: var(--arrow-color);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--arrow-color);
+    position: absolute;
+}
+
+.arrow-head {
+    background-color: transparent;
+    border-style: solid;
+    border-color: var(--arrow-color);
+    border-width: 0;
+    border-radius: 5px;
+    transform: rotate(45deg);
+    min-width: 20px;
+    min-height: 20px;
+    display: flex;
+}

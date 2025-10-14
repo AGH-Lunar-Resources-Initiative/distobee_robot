@@ -9,8 +9,8 @@ from launch_ros.actions import Node
 ODRIVE_INSTANCES = [
     ("odrive_back_left", 11, "can1"),
     ("odrive_back_right", 12, "can1"),
-    ("odrive_front_left", 21, "can0"),
-    ("odrive_front_right", 22, "can0"),
+    ("odrive_front_left", 21, "can1"),
+    ("odrive_front_right", 22, "can1"),
     ("odrive_pipes", 30, "can0"),
     ("odrive_tilt", 40, "can0"),
 ]

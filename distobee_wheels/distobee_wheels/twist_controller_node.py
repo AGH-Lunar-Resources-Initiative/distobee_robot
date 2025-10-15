@@ -83,8 +83,6 @@ class TwistController(rclpy.node.Node):
                 wheel_linear_velocities[i] = -wheel_linear_velocities[i]
                 wheel_angles[i] = flip_angle(wheel_angles[i])
 
-        # clip wheel angles
-        wheel_angles = [np.clip(ang, -MAX_TURN_ANGLE, MAX_TURN_ANGLE) for ang in wheel_angles]
 
         # normalize wheel velocities
         max_wheel_vel = self.get_parameter("max_wheel_vel").value

@@ -31,10 +31,10 @@ class GamepadDriving(Node):
         self.robot_max_vel = self.declare_parameter("robot_max_vel", 0.25)
         self.pipe_max_vel = self.declare_parameter("pipe_max_vel", 10.0)
         self.pipe_max_tilt_angle = self.declare_parameter("pipe_max_tilt_angle", 2.0)
-        self.turn_radius = self.declare_parameter("turn_radius", 2.5)
+        self.turn_radius = self.declare_parameter("turn_radius", 1.5)
         self.frame_id = self.declare_parameter("frame_id", "base_footprint")
         self.tempomat_vel_step = self.declare_parameter("tempomat_vel_step", 0.05)
-        self.pipe_vel_step = self.declare_parameter("pipe_vel_step", 0.05)
+        self.pipe_vel_step = self.declare_parameter("pipe_vel_step", 5.00)
         self.pipe_tilt_step = self.declare_parameter("pipe_tilt_step", 0.05)
 
         self.stopped : bool = False

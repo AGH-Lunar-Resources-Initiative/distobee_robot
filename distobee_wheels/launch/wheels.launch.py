@@ -31,15 +31,6 @@ def launch_setup(context):
                     / "gamepad_driving.yaml"
                     
                 ),
-                {
-                "driving_mode": "MANUAL",
-                "robot_max_vel": 0.25,
-                "pipe_max_tilt_angle": 2.0,
-                "tempomat_vel_step": 0.05,
-                "pipe_max_vel": 10.0,
-                "pipe_vel_step": 5.00,
-                "pipe_tilt_step": 0.05,
-                },
             ],
         ),
         Node(

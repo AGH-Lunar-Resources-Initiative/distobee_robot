@@ -103,6 +103,10 @@ export type SetBoolResponse = {
   message?: string;
 };
 
+// std_srvs/Empty
+export type EmptyRequest = {};
+export type EmptyResponse = {};
+
 export type ColorRGBA = {
   r?: number;
   g?: number;

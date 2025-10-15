@@ -27,7 +27,7 @@ class OdriveStateSwitcher(rclpy.node.Node):
 
         for err_cli in self.err_clis:
             while not err_cli.wait_for_service(timeout_sec=1.0):
-                self.get_logger().info(f'service {axis_clis.srv_name} not available, waiting again...')
+                self.get_logger().info(f'service {err_cli.srv_name} not available, waiting again...')
 
     def request_axis_state_callback(self, request: AxisState.Request, response: AxisState.Response) -> AxisState.Response:
         self.get_logger().info(f'Incoming request for {request.axis_requested_state}')

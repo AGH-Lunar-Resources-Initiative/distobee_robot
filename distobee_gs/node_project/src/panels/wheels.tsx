@@ -7,8 +7,8 @@ import { ros } from '../common/ros';
 import { WheelStates, WheelTelemetry } from '../common/ros-interfaces';
 import { MutableRefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Topic, Service } from 'roslib';
-import { AxisStateRequest, AxisStateResponse } from '../common/ros-interfaces';
-import { faToggleOn, faToggleOff } from '@fortawesome/free-solid-svg-icons';
+import { AxisStateRequest, AxisStateResponse, EmptyRequest, EmptyResponse } from '../common/ros-interfaces';
+import { faToggleOn, faToggleOff, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '../components/button';
 
@@ -21,6 +21,7 @@ let lastWheelTelemetryBl: WheelTelemetry | null = null;
 let lastWheelTelemetryBr: WheelTelemetry | null = null;
 
 let odriveSwitchSrv: Service<AxisStateRequest, AxisStateResponse> = null;
+let odriveClearErrorsSrv: Service<EmptyRequest, EmptyResponse> = null;
 let wheelsTopic: Topic<unknown> | null = null;
 
 window.addEventListener('ros-connect', () => {
@@ -104,6 +105,13 @@ window.addEventListener('ros-connect', () => {
     ros,
     name: '/odrive_switch_state',
     serviceType: 'odrive_can/srv/AxisState'
+  });
+
+  // Service to clear ODrive errors via the odrive_state_switcher node
+  odriveClearErrorsSrv = new Service<EmptyRequest, EmptyResponse>({
+    ros,
+    name: '/odrive_clear_errors',
+    serviceType: 'std_srvs/srv/Empty'
   });
 });
 
@@ -403,6 +411,23 @@ export default function Wheels() {
           >
             <FontAwesomeIcon icon={faToggleOff} />
             &nbsp;&nbsp;Disable
+          </Button>
+        </div>
+        <div className={styles['wheels-controls']}>
+          <Button
+            className={`${styles['sieve-button']} ${styles['yellow-bg']}`}
+            tooltip='Clear ODrive errors'
+            onClick={() => {
+              const svc = odriveClearErrorsSrv;
+              if (svc) {
+                svc.callService({}, (result: any) => {
+                  console.log('odrive clear errors result', result);
+                });
+              }
+            }}
+          >
+            <FontAwesomeIcon icon={faExclamationTriangle} />
+            &nbsp;&nbsp;Clear Errors
           </Button>
         </div>
       </div>

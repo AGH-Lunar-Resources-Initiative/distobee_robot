@@ -177,6 +177,8 @@
 .wheels-controls-wrapper {
     width: 100%;
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
     margin-top: 8px;
 }
@@ -206,4 +208,8 @@
 
 .red-bg {
     background-color: var(--red-background);
+}
+
+.yellow-bg {
+    background-color: var(--yellow-background);
 }

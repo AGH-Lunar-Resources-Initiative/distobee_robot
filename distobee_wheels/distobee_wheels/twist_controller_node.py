@@ -6,8 +6,8 @@ from distobee_interfaces.msg import WheelStates
 
 # wheel positions relative to turning origin (m)
 WHEEL_POSITIONS = [
-    np.array([0.9, 0.35]),  # front left
-    np.array([0.9, -0.35]),  # front right
+    np.array([0.9, 0.3]),  # front left
+    np.array([0.9, -0.3]),  # front right
     np.array([0.0, 0.35]),  # back left
     np.array([0.0, -0.35]),  # back right
 ]

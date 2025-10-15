@@ -3,13 +3,8 @@ from rclpy.node import Node
 from std_msgs.msg import Int32
 from std_msgs.msg import Bool
 from rclpy.qos import ReliabilityPolicy
-
-import RPi.GPIO as GPIO
-
-BRUSHES_DIRECTION_PIN = 15
-BRUSHES_PWM_PIN = 14
-FREQUENCY = 1000  # Frequency in Hz
-VIBRATORS_PWM_PIN = 12
+from distobee_sifter.sifter_motors_command import SifterMotorsCommand
+from distobee_sifter.client import Client
 
 class SifterNode(Node):
     def __init__(self):
@@ -25,21 +20,18 @@ class SifterNode(Node):
 
         self.vibrator_sub = self.create_subscription(
             Bool,
-            'vibrator',
+            'vibrators',
             self.vibrator_callback,
             ReliabilityPolicy.RELIABLE
         )
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(BRUSHES_DIRECTION_PIN, GPIO.OUT)
-        GPIO.setup(BRUSHES_PWM_PIN, GPIO.OUT)
-        GPIO.setup(VIBRATORS_PWM_PIN, GPIO.OUT)
 
-        # Initialize PWM
-        self.brushes_pwm = GPIO.PWM(BRUSHES_PWM_PIN, FREQUENCY)
-        self.brushes_pwm.start(0)
+        self.declare_parameter("tcp_host", "192.168.1.43")
+        self.declare_parameter("tcp_port", 6000)
 
-        self.vibrators_pwm = GPIO.PWM(VIBRATORS_PWM_PIN, FREQUENCY)
-        self.vibrators_pwm.start(0)
+        self.host = self.get_parameter("tcp_host").value
+        self.port = self.get_parameter("tcp_port").get_parameter_value().integer_value
+
+        self.client = Client(self.host, self.port)
 
     def brush_pwm_callback(self, msg: Int32):
         self.get_logger().info(f'Received brush PWM: {msg.data}')
@@ -48,34 +40,16 @@ class SifterNode(Node):
             self.get_logger().warn(f'Brush PWM value {msg.data} out of range (-100 to 100)')
             return
         
-        target_speed: int = msg.data
-
-        if target_speed > 0:
-            GPIO.output(BRUSHES_DIRECTION_PIN, GPIO.HIGH)
-            self.brushes_pwm.ChangeDutyCycle(target_speed)
-            self.get_logger().debug(f"Moving forward at speed {target_speed}%")
-        elif target_speed < 0:
-            GPIO.output(BRUSHES_DIRECTION_PIN, GPIO.LOW)
-            self.brushes_pwm.ChangeDutyCycle(-target_speed)
-            self.get_logger().debug(f"Moving backward at speed {-target_speed}%")
-        else:
-            self.brushes_pwm.ChangeDutyCycle(0)
-            self.get_logger().debug("Motor stopped.")
+        command = SifterMotorsCommand(brush_pwm=msg.data, vibration=None)
+        self.client.send_command(command)
 
 
     def vibrator_callback(self, msg: Bool):
         self.get_logger().info(f'Received vibrator command: {msg.data}')
 
         state: bool = msg.data
-
-        if state is False:
-            self.vibrators_pwm.ChangeDutyCycle(0)
-            self.get_logger().debug("Vibrators turned off.")
-        if state is True:
-            self.vibrators_pwm.ChangeDutyCycle(100)
-            self.get_logger().debug("Vibrators turned on at 100%.")    
-        else:
-            self.get_logger().debug("Invalid state. Please enter 1 or 0.")
+        command = SifterMotorsCommand(brush_pwm=None, vibration=state)
+        self.client.send_command(command)
 
     
 def main():
@@ -86,7 +60,6 @@ def main():
     except KeyboardInterrupt:
         pass
     finally:
-        GPIO.cleanup()
         node.destroy_node()
         rclpy.shutdown()
 

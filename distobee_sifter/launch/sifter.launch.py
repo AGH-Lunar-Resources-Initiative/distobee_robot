@@ -11,6 +11,10 @@ def launch_setup(context):
         Node(
             package="distobee_sifter",
             executable="sifter_driver",
+            parameters=[{
+                "tcp_host": '192.168.1.43',  # sifter IP
+                "tcp_port": 6000,
+            }]
         ),
     ]
 

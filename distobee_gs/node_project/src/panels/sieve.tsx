@@ -15,7 +15,7 @@ let vibratorsTopic: Topic<unknown> | null = null;
 window.addEventListener('ros-connect', () => {
   shaftTopic = new Topic({
     ros: ros,
-    name: '/shaft',
+    name: '/brush_pwm',
     messageType: 'std_msgs/Int32'
   });
 

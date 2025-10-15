@@ -149,3 +149,24 @@ export type SetFeedRequest = {
   power?: number;
 };
 // Response is empty.
+
+export type ControllerStatus = {
+  pos_estimate?: number;
+  vel_estimate?: number;
+  torque_target?: number;
+  torque_estimate?: number;
+  iq_setpoint?: number;
+  iq_measured?: number;
+  active_errors?: number;
+  axis_state?: number;
+  procedure_result?: number;
+  trajectory_done_flag?: boolean;
+};
+
+export type ControlMessage = {
+  control_mode?: number;
+  input_mode?: number;
+  input_pos?: number;
+  input_vel?: number;
+  input_torque?: number;
+};

@@ -380,7 +380,7 @@ export default function Wheels() {
       <div className={styles['wheels-controls-wrapper']}>
         <div className={styles['wheels-controls']} role="group" aria-label="Wheels controls">
           <Button
-            className={`${styles['sieve-button']} ${styles['green-bg']}`}
+            className={`${styles['sieve-button']}`}
             tooltip='Enable wheels (CLOSED_LOOP)'
             onClick={() => {
               const svc = odriveSwitchSrv;

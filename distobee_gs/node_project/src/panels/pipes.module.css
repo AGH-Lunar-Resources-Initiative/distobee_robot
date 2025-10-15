@@ -67,3 +67,32 @@
 @keyframes blinker {
   50% { opacity: 0; }
 }
+
+.tilt-status {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.5rem 0.5rem;
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+  min-width: 300px;
+}
+
+.tilt-row {
+  display: flex;
+  align-items: center;
+  justify-content: stretch;
+  width: 100%;
+}
+
+.tilt-value {
+  min-width: 80px;
+  font-family: 'Courier New', monospace;
+  text-align: center;
+  font-weight: bold;
+  flex-grow: 1;
+}

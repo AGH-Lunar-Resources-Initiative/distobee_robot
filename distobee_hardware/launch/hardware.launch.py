@@ -15,6 +15,8 @@ ODRIVE_INSTANCES = [
     ("odrive_pipes", 30, "can0"),
     ("odrive_tilt", 40, "can0"),
 ]
+FEED_GS_IP = "192.168.1.232"
+FEED_GS_PORTS = [5001, 5002] #, 5003] # distobee_main, distobee_alt, sifter
 
 def launch_setup(context):
     actions = []
@@ -33,7 +35,6 @@ def launch_setup(context):
         )
         for name, node_id, interface in ODRIVE_INSTANCES
     ]
-
     # Initialize ODrive axis states after a delay
     actions += [
         TimerAction(
@@ -52,13 +53,11 @@ def launch_setup(context):
             ]
         )
     ]
-
     # Switch odrives off on exit
     actions += [
         Node(
             package="distobee_hardware",
             executable="odrive_state_switcher",
-            name="odrive_state_switcher",
         ),
     ]
 
@@ -67,16 +66,34 @@ def launch_setup(context):
         Node(
             package="distobee_hardware",
             executable="wheel_driver",
-            name="wheel_driver",
         ),
     ]
 
-    # Feed driver node
+    # Feed drivers
     actions += [
         Node(
             package="distobee_hardware",
             executable="feed_driver",
-            name="feed_driver",
+            name="feed_driver_distobee_main",
+            parameters=[{
+                "udp_host": FEED_GS_IP,
+                "udp_port": FEED_GS_PORTS[0],
+            }],
+            remappings=[
+                ("set_feed", "/set_feed/distobee_main"),
+            ]
+        ),
+        Node(
+            package="distobee_hardware",
+            executable="feed_driver",
+            name="feed_driver_distobee_alt",
+            parameters=[{
+                "udp_host": FEED_GS_IP,
+                "udp_port": FEED_GS_PORTS[1],
+            }],
+            remappings=[
+                ("set_feed", "/set_feed/distobee_alt"),
+            ]
         ),
     ]
 

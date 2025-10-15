@@ -19,7 +19,7 @@ class OdriveStateSwitcher(rclpy.node.Node):
         self.clis = [self.create_client(AxisState, f'/{name}/request_axis_state') for name in ODRIVES]
         for cli in self.clis:
             while not cli.wait_for_service(timeout_sec=1.0):
-                self.get_logger().info('service not available, waiting again...')
+                self.get_logger().info(f'service {cli.srv_name} not available, waiting again...')
 
     def request_axis_state_callback(self, request: AxisState.Request, response: AxisState.Response) -> AxisState.Response:
         self.get_logger().info(f'Incoming request for {request.axis_requested_state}')
@@ -28,7 +28,7 @@ class OdriveStateSwitcher(rclpy.node.Node):
             req = request
             future = cli.call_async(req)
             # FIXME: add a proper executor for spinning the futures
-            continue 
+            continue
             # rclpy.spin_until_future_complete(self, future)
             # if future.result() is not None:
             #     self.get_logger().info(f'Service call to {cli.srv_name} successful: {future.result()}')

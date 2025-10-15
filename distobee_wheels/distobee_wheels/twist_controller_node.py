@@ -13,15 +13,12 @@ WHEEL_POSITIONS = [
 ]
 
 TURN_VECTORS = [
-    np.array([-wheel_pos[1], wheel_pos[0]])  # rot +90
-    for wheel_pos in WHEEL_POSITIONS
+    np.array([-wheel_pos[1], wheel_pos[0]]) for wheel_pos in WHEEL_POSITIONS  # rot +90
 ]
 
 # wheel radius in meters (for converting linear velocity to angular velocity)
 WHEEL_RADIUS = 0.2  # 20cm radius - adjust this value based on actual wheel size
 
-MAX_ACCEL = 0.5 # rad/s^2
-MAX_TURN_ANGLE  = 1.2 # rad
 
 def flip_angle(angle):
     angle += np.pi
@@ -42,26 +39,13 @@ class TwistController(rclpy.node.Node):
         self.create_subscription(TwistStamped, "cmd_vel", self.on_cmd_vel, 10)
 
         # Create state publisher.
-        self.wheel_state_pub = self.create_publisher(WheelStates, "wheel_states/target", 10)
-
-        self.last_time = self.get_clock().now()
-        self.smooth_velocity = 0.0
+        self.wheel_state_pub = self.create_publisher(
+            WheelStates, "wheel_states/target", 10
+        )
 
     def on_cmd_vel(self, msg: TwistStamped):
-        # smooth velocity
-        current_time = self.get_clock().now()
-        dt = (current_time - self.last_time).nanoseconds / 1e9  # convert to seconds
-        self.last_time = current_time
-        if dt <= 0.0:
-            dt = 1e-6  # Prevent division by zero
-        max_delta = MAX_ACCEL * dt
-        delta = msg.twist.linear.x - self.smooth_velocity
-        if abs(delta) > max_delta:
-            delta = np.sign(delta) * max_delta
-        self.smooth_velocity += delta
-
         # linear motion vector
-        linear_vector = np.array([self.smooth_velocity, 0.0])
+        linear_vector = np.array([msg.twist.linear.x, 0.0])
 
         # angular motion vectors
         angular_vectors = [vec * msg.twist.angular.z for vec in TURN_VECTORS]
@@ -83,7 +67,6 @@ class TwistController(rclpy.node.Node):
                 wheel_linear_velocities[i] = -wheel_linear_velocities[i]
                 wheel_angles[i] = flip_angle(wheel_angles[i])
 
-
         # normalize wheel velocities
         max_wheel_vel = self.get_parameter("max_wheel_vel").value
         cur_max_vel = max(wheel_linear_velocities[2:])  # only back wheels drive
@@ -93,11 +76,13 @@ class TwistController(rclpy.node.Node):
             ]
 
         # convert linear velocities to angular velocities (rad/s)
-        wheel_angular_velocities = [vel / WHEEL_RADIUS for vel in wheel_linear_velocities]
+        wheel_angular_velocities = [
+            vel / WHEEL_RADIUS for vel in wheel_linear_velocities
+        ]
 
         # publish wheel states
         wheel_states = WheelStates()
-        wheel_states.back_left_velocity = wheel_angular_velocities[2]   # rad/s
+        wheel_states.back_left_velocity = wheel_angular_velocities[2]  # rad/s
         wheel_states.back_right_velocity = wheel_angular_velocities[3]  # rad/s
         wheel_states.front_left_angle = wheel_angles[0]
         wheel_states.front_right_angle = wheel_angles[1]

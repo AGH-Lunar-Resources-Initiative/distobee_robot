@@ -15,6 +15,7 @@ SET_PIPES_VEL = 7
 # BUTTONS
 RIGHT_SHOULDER = 5
 LEFT_SHOULDER = 4
+PIPES_ROT_DIR = 6
 CHANGE_MODE = 7
 
 # TILT BUTTONS
@@ -31,21 +32,23 @@ class GamepadDriving(Node):
         self.toggle_modes = ["MANUAL", "TEMPOMAT", "INPLACE"]
         self.start_mode = self.declare_parameter("driving_mode", "MANUAL")
         self.robot_max_vel = self.declare_parameter("robot_max_vel", 0.25)
-        self.pipe_max_vel = self.declare_parameter("pipe_max_vel", 10.0)
-        self.pipe_max_tilt_angle = self.declare_parameter("pipe_max_tilt_angle", 2.0)
+        self.pipe_max_vel = self.declare_parameter("pipe_max_vel", 13.0)
+        self.pipe_max_tilt_angle = self.declare_parameter("pipe_max_tilt_angle", 0.18)
         self.turn_radius = self.declare_parameter("turn_radius", 1.5)
         self.frame_id = self.declare_parameter("frame_id", "base_footprint")
         self.tempomat_vel_step = self.declare_parameter("tempomat_vel_step", 0.05)
-        self.pipe_vel_step = self.declare_parameter("pipe_vel_step", 5.00)
-        self.pipe_tilt_step = self.declare_parameter("pipe_tilt_step", 0.05)
+        self.pipe_vel_step = self.declare_parameter("pipe_vel_step", 0.3)
+        self.pipe_tilt_step = self.declare_parameter("pipe_tilt_step", 0.01)
 
         self.stopped: bool = False
         self.drilling_state = False
+        self.pipe_rot_dir = False # default spinning
         self.mode: str = self.start_mode.value
         self.mode_idx: int = 0
         self.tempomat_vel: float = 0.0
         self.pipe_vel: float = 0.0
-        self.pipe_tilt: float = 0.0
+        self.pipe_min_tilt = 0.025
+        self.pipe_tilt: float = 0.1
         self.prev_mode: str = self.start_mode.value
 
         self.last_time = self.get_clock().now()
@@ -90,6 +93,14 @@ class GamepadDriving(Node):
 
         self.prev_left_shoulder = msg.buttons[LEFT_SHOULDER]
         self.prev_change_mode = msg.buttons[CHANGE_MODE]
+
+        if not hasattr(self, "prev_pipes_rot_dir"):
+            self.prev_pipes_rot_dir = 0
+
+        if msg.buttons[PIPES_ROT_DIR] == 1.0 and self.prev_pipes_rot_dir == 0:
+            self.pipe_rot_dir = not self.pipe_rot_dir
+
+        self.prev_pipes_rot_dir = msg.buttons[PIPES_ROT_DIR]
 
         if self.mode == "STOP":
             twist_stamped = TwistStamped()
@@ -187,12 +198,21 @@ class GamepadDriving(Node):
         self.prev_shoulder = msg.buttons[RIGHT_SHOULDER]
 
         if self.drilling_state:
-            if msg.axes[SET_PIPES_VEL] == 1.0:
-                self.pipe_vel += self.pipe_vel_step.value
-            elif msg.axes[SET_PIPES_VEL] == -1.0:
-                self.pipe_vel -= self.pipe_vel_step.value
+            # Adjust pipe velocity based on rotation direction
+            if not self.pipe_rot_dir:
+                if msg.axes[SET_PIPES_VEL] == 1.0:
+                    self.pipe_vel += self.pipe_vel_step.value
+                elif msg.axes[SET_PIPES_VEL] == -1.0:
+                    self.pipe_vel -= self.pipe_vel_step.value
+                self.pipe_vel = min(max(self.pipe_vel, 0.0), self.pipe_max_vel.value)
+            else:
+                if msg.axes[SET_PIPES_VEL] == 1.0:
+                    self.pipe_vel -= self.pipe_vel_step.value
+                elif msg.axes[SET_PIPES_VEL] == -1.0:
+                    self.pipe_vel += self.pipe_vel_step.value
+                self.pipe_vel = max(min(self.pipe_vel, 0), -self.pipe_max_vel.value)
 
-            self.pipe_vel = min(max(self.pipe_vel, 0.0), self.pipe_max_vel.value)
+                # self.pipe_vel = max(min(self.pipe_vel, 0.0), self.pipe_max_vel.value)
 
             control_msg = ControlMessage()
             control_msg.control_mode = 2
@@ -203,18 +223,27 @@ class GamepadDriving(Node):
             self.pipe_vel_pub.publish(control_msg)
 
         if self.mode == "MANUAL" or self.mode == "TEMPOMAT":
-            if msg.buttons[TILT_DOWN] == 1.0:
+            # Add pressed check for tilt buttons
+            if not hasattr(self, "prev_tilt_down"):
+                self.prev_tilt_down = 0
+            if not hasattr(self, "prev_tilt_up"):
+                self.prev_tilt_up = 0
+
+            if msg.buttons[TILT_DOWN] == 1.0 and self.prev_tilt_down == 0:
                 self.pipe_tilt += self.pipe_tilt_step.value
-            elif msg.buttons[TILT_UP] == 1.0:
+            if msg.buttons[TILT_UP] == 1.0 and self.prev_tilt_up == 0:
                 self.pipe_tilt -= self.pipe_tilt_step.value
 
+            self.prev_tilt_down = msg.buttons[TILT_DOWN]
+            self.prev_tilt_up = msg.buttons[TILT_UP]
+
             self.pipe_tilt = min(
-                max(self.pipe_tilt, 0.0), self.pipe_max_tilt_angle.value
+                max(self.pipe_tilt, self.pipe_min_tilt), self.pipe_max_tilt_angle.value
             )
 
             control_msg = ControlMessage()
-            control_msg.control_mode = 2
-            control_msg.input_mode = 2
+            control_msg.control_mode = 3
+            control_msg.input_mode = 3
             control_msg.input_pos = self.pipe_tilt
             control_msg.input_vel = 0.0
             control_msg.input_torque = 0.0

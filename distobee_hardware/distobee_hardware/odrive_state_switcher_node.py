@@ -1,6 +1,7 @@
 import rclpy
 import rclpy.node
 from odrive_can.srv import AxisState
+from std_srvs.srv import Empty
 
 ODRIVES = [
     "odrive_back_left",
@@ -15,27 +16,46 @@ class OdriveStateSwitcher(rclpy.node.Node):
     def __init__(self):
         super().__init__("odrive_state_switcher")
         self.srv = self.create_service(AxisState, 'odrive_switch_state', self.request_axis_state_callback)
+        self.err_srv = self.create_service(Empty, 'odrive_clear_errors', self.request_clear_errors_callback)
 
-        self.clis = [self.create_client(AxisState, f'/{name}/request_axis_state') for name in ODRIVES]
-        for cli in self.clis:
-            while not cli.wait_for_service(timeout_sec=1.0):
-                self.get_logger().info(f'service {cli.srv_name} not available, waiting again...')
+        self.axis_clis = [self.create_client(AxisState, f'/{name}/request_axis_state') for name in ODRIVES]
+        self.err_clis = [self.create_client(Empty, f'/{name}/clear_errors') for name in ODRIVES]
+
+        for axis_clis in self.axis_clis:
+            while not axis_clis.wait_for_service(timeout_sec=1.0):
+                self.get_logger().info(f'service {axis_clis.srv_name} not available, waiting again...')
+
+        for err_cli in self.err_clis:
+            while not err_cli.wait_for_service(timeout_sec=1.0):
+                self.get_logger().info(f'service {axis_clis.srv_name} not available, waiting again...')
 
     def request_axis_state_callback(self, request: AxisState.Request, response: AxisState.Response) -> AxisState.Response:
         self.get_logger().info(f'Incoming request for {request.axis_requested_state}')
 
-        for cli in self.clis:
+        for cli in self.axis_clis:
             req = request
             future = cli.call_async(req)
             # FIXME: add a proper executor for spinning the futures
             continue
-            # rclpy.spin_until_future_complete(self, future)
-            # if future.result() is not None:
-            #     self.get_logger().info(f'Service call to {cli.srv_name} successful: {future.result()}')
-            # else:
-            #     self.get_logger().error(f'Service call to {cli.srv_name} failed {future.exception()}')
+    
+        return response
+
+
+    def request_clear_errors_callback(self, request: Empty.Request, response: Empty.Response) -> Empty.Response:
+        self.get_logger().info(f'Incoming clear error request...')
+
+        for cli in self.err_clis:
+            req = request
+            future = cli.call_async(req)
+            # FIXME: add a proper executor for spinning the futures
+            continue
 
         return response
+
+
+
+        
+        
 
 
 def main():

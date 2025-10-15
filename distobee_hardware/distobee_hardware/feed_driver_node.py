@@ -30,7 +30,7 @@ class FeedDriver(Node):
     def __init__(self):
         super().__init__("feed_driver")
         
-        self.declare_parameter("udp_host", "192.168.1.20")
+        self.declare_parameter("udp_host", "127.0.0.1")
         self.declare_parameter("udp_port", 5000)
         self.host = self.get_parameter("udp_host").value
         self.port = self.get_parameter("udp_port").value
@@ -77,7 +77,7 @@ class FeedDriver(Node):
         self.pipeline.set_state(Gst.State.PLAYING)
 
     def on_set_feed(self, msg: Int8):
-        idx = msg.data
+        idx = msg.data - 1 # 0=test, 1=camera 1, 2=camera 2, ...
         
         if self.last_device_index == idx:
             return

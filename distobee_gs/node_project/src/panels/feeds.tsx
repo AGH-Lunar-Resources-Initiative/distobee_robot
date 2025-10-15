@@ -89,13 +89,9 @@ function Feed({ feedIndex, max }: FeedProps) {
   const [rerenderCount, setRerenderCount] = useState(0);
   useEffect(() => {
     const update = () => setRerenderCount((c) => c + 1);
-
-    window.addEventListener('feeds-updated-distobee', update);
-    window.addEventListener('feeds-updated-sieve', update);
-
+    window.addEventListener('feeds-updated', update);
     return () => {
-      window.removeEventListener('feeds-updated-distobee', update);
-      window.removeEventListener('feeds-updated-sieve', update);
+      window.removeEventListener('feeds-updated', update);
     };
   }, []);
 
@@ -104,20 +100,19 @@ function Feed({ feedIndex, max }: FeedProps) {
       <div className={styles['feed-controls-row']}>
         <div className={styles['icon']}>
           <FontAwesomeIcon icon={faDisplay} />
-          <FontAwesomeIcon className={styles['icon-digit']} icon={[faCar, faFlask][feedIndex]} />
+          <FontAwesomeIcon className={styles['icon-digit']} icon={[faCar, faCar, faFlask][feedIndex]} />
         </div>
       </div>
       <IntegerSelector
-        labelColor={feedIndex == 0 ? redBg : blueBg}
+        labelColor={feedIndex < 2 ? redBg : blueBg}
         labelIcon={faCamera}
-        labelTooltip='Camera (1 to 8)'
+        labelTooltip='Camera (1-indexed)'
         min={1}
         max={max}
         defaultValue={feedCameras[feedIndex]}
         onSet={(value) => {
           feedCameras[feedIndex] = value;
-          const ev = feedIndex === 0 ? 'feeds-updated-distobee' : 'feeds-updated-sieve';
-          window.dispatchEvent(new CustomEvent(ev, { detail: { camera: value } }));
+          window.dispatchEvent(new Event('feeds-updated'));
         }}
         key={feedCameras[feedIndex]}
       />
@@ -130,7 +125,10 @@ export default function Feeds() {
     <div className={styles['feeds-panel']}>
       <div className={styles['feeds']}>
         <Feed feedIndex={0} max={6} />
-        <Feed feedIndex={1} max={3} />
+        <Feed feedIndex={1} max={6} />
+      </div>
+      <div className={styles['feeds']}>
+        <Feed feedIndex={2} max={3} />
       </div>
     </div>
   );

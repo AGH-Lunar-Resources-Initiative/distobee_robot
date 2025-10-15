@@ -1,4 +1,4 @@
-import styles from './sieve.module.css';
+import styles from './sifter.module.css';
 
 import { ros } from '../common/ros';
 import { faToggleOn, faToggleOff, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -28,7 +28,7 @@ window.addEventListener('ros-connect', () => {
 
 const clamp = (v: number, min = -100, max = 100) => Math.max(min, Math.min(max, v));
 
-export default function Sieve() {
+export default function Sifter() {
   const inputRef = useRef<Input>(null);
 
   const [vibratorsEnabled, setVibratorsEnabled] = useState(false);
@@ -70,12 +70,12 @@ export default function Sieve() {
   };
 
   return (
-    <div className={styles['sieve']}>
-      <div className={styles['sieve-rows']}>
-        <div className={styles['sieve-row']}>
-          <h3 className={styles['sieve-header']}>Main shaft</h3>
+    <div className={styles['sifter']}>
+      <div className={styles['sifter-rows']}>
+        <div className={styles['sifter-row']}>
+          <h3 className={styles['sifter-header']}>Main shaft</h3>
         </div>
-        <div className={styles['sieve-controls-row']}>
+        <div className={styles['sifter-controls-row']}>
           <Button onClick={() => adjust(-1)} className={styles['red-bg']}>
             <FontAwesomeIcon icon={faMinus} />
           </Button>
@@ -93,12 +93,12 @@ export default function Sieve() {
             <FontAwesomeIcon icon={faPlus} />
           </Button>
         </div>
-        <div className={styles['sieve-row']}>
-          <h3 className={styles['sieve-header']}>Vibrators</h3>
+        <div className={styles['sifter-row']}>
+          <h3 className={styles['sifter-header']}>Vibrators</h3>
         </div>
-        <div className={styles['sieve-row']}>
+        <div className={styles['sifter-row']}>
           <Button
-            className={`${styles['sieve-button']} ${vibratorsEnabled ? styles['green-bg'] : ''}`}
+            className={`${styles['sifter-button']} ${vibratorsEnabled ? styles['green-bg'] : ''}`}
             tooltip='Enable vibrators'
             onClick={() => {
               setVibratorsEnabled(true);
@@ -109,7 +109,7 @@ export default function Sieve() {
             &nbsp;&nbsp;Enable
           </Button>
           <Button
-            className={`${styles['sieve-button']} ${!vibratorsEnabled ? styles['red-bg'] : ''}`}
+            className={`${styles['sifter-button']} ${!vibratorsEnabled ? styles['red-bg'] : ''}`}
             tooltip='Disable vibrators'
             onClick={() => {
               setVibratorsEnabled(false);

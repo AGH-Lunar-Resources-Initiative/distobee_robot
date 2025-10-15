@@ -8,6 +8,10 @@ class Description(TypedDict):
     pass
 
 
+class Gs(TypedDict):
+    pass
+
+
 class Hardware(TypedDict):
     pass
 
@@ -24,6 +28,8 @@ class Wheels(TypedDict):
 class BringupConfig(TypedDict):
     description: Description
     "distobee_description"
+    gs: Gs
+    "distobee_gs"
     hardware: Hardware
     "distobee_hardware"
     rviz: Rviz

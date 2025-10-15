@@ -1,16 +1,19 @@
 const defaultKeybinds = {
-  // Feeds
-  'Show Camera 1 on Distobee feed': 'Digit1',
-  'Show Camera 2 on Distobee feed': 'Digit2',
-  'Show Camera 3 on Distobee feed': 'Digit3',
-  'Show Camera 4 on Distobee feed': 'Digit4',
-  'Show Camera 5 on Distobee feed': 'Digit5',
-  'Show Camera 6 on Distobee feed': 'Digit6',
-  'Show Camera 1 on Sieve feed': 'Digit7',
-  'Show Camera 2 on Sieve feed': 'Digit8',
-  'Show Camera 3 on Sieve feed': 'Digit9',
-  // Other
-  'Engage Remote E-STOP': 'Semicolon'
+  'Show Camera 1 on Distobee Main Feed': 'Digit1',
+  'Show Camera 2 on Distobee Main Feed': 'Digit2',
+  'Show Camera 3 on Distobee Main Feed': 'Digit3',
+  'Show Camera 4 on Distobee Main Feed': 'Digit4',
+  'Show Camera 5 on Distobee Main Feed': 'Digit5',
+  'Show Camera 6 on Distobee Main Feed': 'Digit6',
+  'Show Camera 1 on Distobee Alt Feed': 'KeyQ',
+  'Show Camera 2 on Distobee Alt Feed': 'KeyW',
+  'Show Camera 3 on Distobee Alt Feed': 'KeyE',
+  'Show Camera 4 on Distobee Alt Feed': 'KeyR',
+  'Show Camera 5 on Distobee Alt Feed': 'KeyT',
+  'Show Camera 6 on Distobee Alt Feed': 'KeyY',
+  'Show Camera 1 on Sifter Feed': 'KeyA',
+  'Show Camera 2 on Sifter Feed': 'KeyS',
+  'Show Camera 3 on Sifter Feed': 'KeyD',
 };
 
 // Copy default keybinds to keybinds.

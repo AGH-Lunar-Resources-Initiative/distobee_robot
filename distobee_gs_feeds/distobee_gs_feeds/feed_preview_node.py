@@ -67,37 +67,14 @@ class FeedPreview(Node):
                     f"Pipeline state changed from {old_state.value_nick} "
                     f"to {new_state.value_nick}"
                 )
-    
-    def shutdown(self):
-        if self.pipeline:
-            self.get_logger().info("Stopping pipeline")
-            self.pipeline.set_state(Gst.State.NULL)
-    
-    def destroy_node(self):
-        self.shutdown()
-        super().destroy_node()
 
 
-def main(args=None):
-    rclpy.init(args=args)
-    
-    node = FeedPreview()
-    
-    # Set up signal handlers for graceful shutdown
-    def signal_handler(sig, frame):
-        node.get_logger().info("Interrupt received, shutting down...")
-        node.shutdown()
-        rclpy.shutdown()
-        sys.exit(0)
-    
-    signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler)
-    
+def main():
     try:
+        rclpy.init()
+        node = FeedPreview()
         rclpy.spin(node)
+        node.destroy_node()
+        rclpy.shutdown()
     except KeyboardInterrupt:
         pass
-    finally:
-        node.destroy_node()
-        if rclpy.ok():
-            rclpy.shutdown()

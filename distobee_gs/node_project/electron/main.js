@@ -25,7 +25,7 @@ function createWindow() {
     window.focus();
   });
 
-  window.webContents.openDevTools({ mode: 'detach' });
+  // window.webContents.openDevTools({ mode: 'detach' });
 }
 
 app.whenReady().then(() => {

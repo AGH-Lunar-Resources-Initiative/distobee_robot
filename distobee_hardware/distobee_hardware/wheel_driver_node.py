@@ -140,7 +140,7 @@ class WheelDriver(rclpy.node.Node):
         # Front left wheel (steer)
         front_left_msg = ControlMessage()
         front_left_msg.control_mode = 3  # POSITION_CONTROL
-        front_left_msg.input_mode = 1  # PASSTHROUGH
+        front_left_msg.input_mode = 3  # Position filter mode
         front_left_msg.input_pos = msg.front_left_angle / (2 * M_PI)  # No offset necessary, everything is done in odrive firmware
         front_left_msg.input_vel = 0.0
         front_left_msg.input_torque = 0.0
@@ -149,7 +149,7 @@ class WheelDriver(rclpy.node.Node):
         # Front right wheel (steer)
         front_right_msg = ControlMessage()
         front_right_msg.control_mode = 3  # POSITION_CONTROL
-        front_right_msg.input_mode = 1  # PASSTHROUGH
+        front_right_msg.input_mode = 3  # Position filter mode
         front_right_msg.input_pos = msg.front_right_angle / (2 * M_PI)  # No offset necessary, everything is done in odrive firmware
 
         front_right_msg.input_vel = 0.0

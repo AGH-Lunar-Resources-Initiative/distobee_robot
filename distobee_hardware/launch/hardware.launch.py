@@ -19,7 +19,7 @@ ODRIVE_INSTANCES = [
 def launch_setup(context):
     actions = []
 
-    # Create ODrive nodes
+    # # Create ODrive nodes
     actions += [
         Node(
             package="odrive_can",
@@ -34,7 +34,43 @@ def launch_setup(context):
         for name, node_id, interface in ODRIVE_INSTANCES
     ]
 
-    # Initialize ODrive axis states after a delay
+    # Wheel driver node
+    actions += [
+        Node(
+            package="distobee_hardware",
+            executable="wheel_driver",
+        ),
+    ]
+
+    # Feed driver node
+    actions += [
+        Node(
+            package="distobee_hardware",
+            executable="feed_driver",
+            name="feed_driver_distobee_main",
+            remappings=[
+                ("set_feed", "/set_feed/distobee_main"),
+            ]
+        ),
+        Node(
+            package="distobee_hardware",
+            executable="feed_driver",
+            name="feed_driver_distobee_alt",
+            remappings=[
+                ("set_feed", "/set_feed/distobee_alt"),
+            ]
+        ),
+    ]
+
+    # Switch odrives off on exit
+    actions += [
+        Node(
+            package="distobee_hardware",
+            executable="odrive_state_switcher",
+        ),
+    ]
+
+       # Initialize ODrive axis states after a delay
     actions += [
         TimerAction(
             period=2.0,
@@ -51,33 +87,6 @@ def launch_setup(context):
                 for name, _, _ in ODRIVE_INSTANCES
             ]
         )
-    ]
-
-    # Switch odrives off on exit
-    actions += [
-        Node(
-            package="distobee_hardware",
-            executable="odrive_state_switcher",
-            name="odrive_state_switcher",
-        ),
-    ]
-
-    # Wheel driver node
-    actions += [
-        Node(
-            package="distobee_hardware",
-            executable="wheel_driver",
-            name="wheel_driver",
-        ),
-    ]
-
-    # Feed driver node
-    actions += [
-        Node(
-            package="distobee_hardware",
-            executable="feed_driver",
-            name="feed_driver",
-        ),
     ]
 
     return actions

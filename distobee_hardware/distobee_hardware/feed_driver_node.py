@@ -30,7 +30,7 @@ class FeedDriver(Node):
     def __init__(self):
         super().__init__("feed_driver")
         
-        self.declare_parameter("udp_host", "192.168.1.232")
+        self.declare_parameter("udp_host", "192.168.1.20")
         self.declare_parameter("udp_port", 5000)
         self.host = self.get_parameter("udp_host").value
         self.port = self.get_parameter("udp_port").value

@@ -8,5 +8,6 @@ def generate_launch_description():
             "rviz": {"configs": "demo_urdf_model"},
             "wheels": {},
             "sifter": {},
+            "gs_feeds": {},
         }
     )

@@ -6,7 +6,11 @@ import distobeeLeftWheel from '!!url-loader!../media/distobee-wheel.svg';
 import { ros } from '../common/ros';
 import { WheelStates, WheelTelemetry } from '../common/ros-interfaces';
 import { MutableRefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Topic } from 'roslib';
+import { Topic, Service } from 'roslib';
+import { AxisStateRequest, AxisStateResponse } from '../common/ros-interfaces';
+import { faToggleOn, faToggleOff } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Button from '../components/button';
 
 let lastWheelStates: WheelStates | null = null;
 let lastWheelStatesReturn: WheelStates | null = null;
@@ -15,6 +19,9 @@ let lastWheelTelemetryFl: WheelTelemetry | null = null;
 let lastWheelTelemetryFr: WheelTelemetry | null = null;
 let lastWheelTelemetryBl: WheelTelemetry | null = null;
 let lastWheelTelemetryBr: WheelTelemetry | null = null;
+
+let odriveSwitchSrv: Service<AxisStateRequest, AxisStateResponse> = null;
+let wheelsTopic: Topic<unknown> | null = null;
 
 window.addEventListener('ros-connect', () => {
   const targetTopic = new Topic({
@@ -82,6 +89,21 @@ window.addEventListener('ros-connect', () => {
   telemetryBr.subscribe((msg: WheelTelemetry) => {
     lastWheelTelemetryBr = msg;
     window.dispatchEvent(new Event('wheel-telemetry-br'));
+  });
+
+  // Topic for enabling/disabling wheels from the GUI (kept for backward compatibility if needed)
+  // publishes std_msgs/Bool with current enabled/disabled state
+  wheelsTopic = new Topic<unknown>({
+    ros,
+    name: '/wheels/enable',
+    messageType: 'std_msgs/Bool'
+  });
+
+  // Service to request ODrive axis state change via the odrive_state_switcher node
+  odriveSwitchSrv = new Service<AxisStateRequest, AxisStateResponse>({
+    ros,
+    name: '/odrive_switch_state',
+    serviceType: 'odrive_can/srv/AxisState'
   });
 });
 
@@ -333,6 +355,7 @@ function Rover({ panelId, showTarget = false }: RoverProps) {
           />
         </div>
       </div>
+  {/* controls moved to parent Wheels component to avoid duplication */}
     </div>
   );
 }
@@ -342,8 +365,47 @@ export default function Wheels() {
 
   return (
     <div id={id} className={styles['wheels']}>
-      <Rover panelId={id} />
-      <Rover panelId={id} showTarget />
+      <div className={styles['rover-wrapper']}>
+        <Rover panelId={id} />
+        <Rover panelId={id} showTarget />
+      </div>
+      <div className={styles['wheels-controls-wrapper']}>
+        <div className={styles['wheels-controls']} role="group" aria-label="Wheels controls">
+          <Button
+            className={`${styles['sieve-button']} ${styles['green-bg']}`}
+            tooltip='Enable wheels (CLOSED_LOOP)'
+            onClick={() => {
+              const svc = odriveSwitchSrv;
+              if (svc) {
+                svc.callService({ axis_requested_state: 8 }, (result: any) => {
+                  // result handling optional
+                  console.log('odrive switch result', result);
+                });
+              }
+              (document.getElementById(id) as HTMLElement)?.setAttribute('data-wheels-enabled', 'true');
+            }}
+          >
+            <FontAwesomeIcon icon={faToggleOn} />
+            &nbsp;&nbsp;Enable
+          </Button>
+          <Button
+            className={`${styles['sieve-button']} ${styles['red-bg']}`}
+            tooltip='Disable wheels (IDLE)'
+            onClick={() => {
+              const svc = odriveSwitchSrv;
+              if (svc) {
+                svc.callService({ axis_requested_state: 1 }, (result: any) => {
+                  console.log('odrive switch result', result);
+                });
+              }
+              (document.getElementById(id) as HTMLElement)?.setAttribute('data-wheels-enabled', 'false');
+            }}
+          >
+            <FontAwesomeIcon icon={faToggleOff} />
+            &nbsp;&nbsp;Disable
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

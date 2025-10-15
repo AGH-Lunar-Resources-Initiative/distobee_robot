@@ -122,6 +122,17 @@ export type WheelTelemetry = {
   state?: number;
 };
 
+// odrive_can/AxisState service
+export type AxisStateRequest = {
+  axis_requested_state?: number;
+};
+
+export type AxisStateResponse = {
+  active_errors?: number;
+  axis_state?: number;
+  procedure_result?: number;
+};
+
 export type PipeStates = {
   left?: boolean;
   right?: boolean;

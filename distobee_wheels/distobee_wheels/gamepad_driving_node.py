@@ -38,7 +38,7 @@ class GamepadDriving(Node):
         self.frame_id = self.declare_parameter("frame_id", "base_footprint")
         self.tempomat_vel_step = self.declare_parameter("tempomat_vel_step", 0.05)
         self.pipe_vel_step = self.declare_parameter("pipe_vel_step", 0.3)
-        self.pipe_tilt_step = self.declare_parameter("pipe_tilt_step", 0.01)
+        self.pipe_tilt_step = self.declare_parameter("pipe_tilt_step", 0.005)
 
         self.stopped: bool = False
         self.drilling_state = False
@@ -48,7 +48,7 @@ class GamepadDriving(Node):
         self.tempomat_vel: float = 0.0
         self.pipe_vel: float = 0.0
         self.pipe_min_tilt = 0.025
-        self.pipe_tilt: float = 0.1
+        self.pipe_tilt: float = 0.15
         self.prev_mode: str = self.start_mode.value
 
         self.last_time = self.get_clock().now()
@@ -240,7 +240,6 @@ class GamepadDriving(Node):
             self.pipe_tilt = min(
                 max(self.pipe_tilt, self.pipe_min_tilt), self.pipe_max_tilt_angle.value
             )
-
             control_msg = ControlMessage()
             control_msg.control_mode = 3
             control_msg.input_mode = 3

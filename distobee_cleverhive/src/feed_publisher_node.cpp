@@ -12,7 +12,7 @@
 #include <gst/app/gstappsink.h>
 #include <opencv2/opencv.hpp>
 
-namespace distobee_gs_feeds {
+namespace distobee_cleverhive {
 
 class FeedPublisher : public rclcpp::Node
 {
@@ -193,6 +193,6 @@ private:
   rclcpp::TimerBase::SharedPtr timer_;
 };
 
-} // namespace distobee_gs_feeds
+} // namespace distobee_cleverhive
 
-RCLCPP_COMPONENTS_REGISTER_NODE(distobee_gs_feeds::FeedPublisher)
+RCLCPP_COMPONENTS_REGISTER_NODE(distobee_cleverhive::FeedPublisher)
